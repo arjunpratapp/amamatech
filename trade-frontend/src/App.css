@@ -1,0 +1,113 @@
+/* ==========================================
+   1. GLOBAL CANVAS SETUP
+   ========================================== */
+   html, 
+   body, 
+   #root {
+     margin: 0 !important;
+     padding: 0 !important;
+     width: 100% !important;
+     max-width: none !important;
+     min-height: 100vh;
+     background-color: #090d16;   
+     box-sizing: border-box;
+     overflow-x: hidden;          
+   }
+   
+   /* ==========================================
+      2. MAIN WIDESCREEN CONTAINER
+      ========================================== */
+   #center {
+     display: flex;
+     flex-direction: column;
+     gap: 40px; /* Increased breathing room between major terminal layers */
+     place-content: stretch !important; 
+     place-items: stretch !important;   
+     flex-grow: 1;
+     width: 100%;
+     max-width: 1600px; /* Caps the content at an ultra-wide structural limit */
+     margin: 0 auto;    /* Centers the wide canvas on massive 4K or ultra-wide screens */
+     box-sizing: border-box;
+     padding: 40px 60px; /* Pushes inward cleanly from system edges */
+   }
+   
+   /* ==========================================
+      3. THE 3 COMPLIANCE NODES (HORIZONTAL GRID)
+      ========================================== */
+   /* If those 3 cards are wrapped inside a generic container or #next-steps, we force desktop row expansion */
+   #next-steps {
+     display: grid;
+     grid-template-columns: repeat(3, 1fr); /* Forces cards side-by-side on desktop views */
+     gap: 24px;
+     width: 100%;
+     box-sizing: border-box;
+     border-top: 1px solid var(--border);
+     text-align: left;
+   }
+   
+   #next-steps > div {
+     flex: 1 1 0;
+     padding: 32px;
+     background-color: #0f172a; /* Solid background base to isolate panels */
+     border-radius: 12px;
+     border: 1px solid var(--border);
+   }
+   
+   /* ==========================================
+      4. DUAL-SIDED CLEARING FLOW (HORIZONTAL MATRIX)
+      ========================================== */
+   /* Ensure the wrapper holding the Supplier Desk, Clearing Hub, and Buyer Desk sits in a row, not a stack */
+   .dual-pipeline-container {
+     display: flex;
+     flex-direction: row; /* Forces side-by-side execution layout */
+     justify-content: space-between;
+     align-items: center;
+     gap: 20px;
+     width: 100%;
+   }
+   
+   .dual-pipeline-container > div {
+     flex: 1;
+   }
+   
+   /* ==========================================
+      5. RESPONSIVE COMPACT DOWNGRADE (MOBILE FALLBACK ONLY)
+      ========================================== */
+   @media (max-width: 1024px) {
+     #center {
+       padding: 24px 20px;
+       gap: 24px;
+     }
+   
+     #next-steps {
+       grid-template-columns: 1fr; /* Drop to vertical stack ONLY on small tablets/mobile */
+       text-align: center;
+     }
+     
+     #next-steps > div {
+       padding: 24px 20px;
+     }
+   
+     .dual-pipeline-container {
+       flex-direction: column; /* Stacks layout path items only when viewport breaks */
+     }
+   }
+   
+   /* ==========================================
+      6. TRANSFORM STABILITY (HERO ICON VECTORS)
+      ========================================== */
+   .hero {
+     position: relative;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     width: 100%;
+     margin-bottom: 20px;
+   }
+   
+   .hero .base,
+   .hero .framework,
+   .hero .vite {
+     inset-inline: 0;
+     margin: 0 auto;
+   }
