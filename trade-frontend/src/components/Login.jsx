@@ -1,51 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-// Isolated Authentication Pipeline (Ready for API substitution later)
-const mockApiAuthentication = async (email, password, role) => {
-  // Simulate network flight time latency
-  await new Promise((resolve) => setTimeout(resolve, 600));
+// Dynamic API base URL resolution from environment variables or local fallback
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
-  // CURRENT TESTING LAYER: Validates against dummy test seeds
-  if (role === 'SUPPLIER' && email === 'ops@amamaexporters.com' && password === 'supplier123') {
-    return {
-      success: true,
-      user: {
-        email,
-        role,
-        companyId: 'AMAMA_EXP_991',
-        companyName: 'Amama Exporters Pvt Ltd'
-      }
-    };
-  } else if (role === 'BUYER' && email === 'procurement@globalbuy.de' && password === 'buyer123') {
-    return {
-      success: true,
-      user: {
-        email,
-        role,
-        companyId: 'GLOBAL_BUY_007',
-        companyName: 'Global Buy Logistics'
-      }
-    };
-  }
-
-  // Fallback production error structure
-  return {
-    success: false,
-    message: 'Invalid redentials. Gateway handshake refused.'
-  };
-};
-
-export default function Login({ onLoginSuccess }) {
-  const [role, setRole] = useState('SUPPLIER'); // 'SUPPLIER' or 'BUYER'
-  const [email, setEmail] = useState('');
+export default function Login({ onLoginSuccess, initialEmail = '', initialRole = 'SUPPLIER', onNavigateToOnboarding }) {
+  const [role, setRole] = useState(initialRole); // 'SUPPLIER' or 'BUYER'
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
 
-  // Dynamic Neon Signature tokens mapping down from the parent shell rules
-  const themeAccent = role === 'SUPPLIER' ? '#fbbf24' : '#ec4899';
-  const themeGlow = role === 'SUPPLIER' ? 'rgba(251, 191, 36, 0.15)' : 'rgba(236, 72, 153, 0.15)';
+  // Sync initial props when passed from Onboarding
+  useEffect(() => {
+    if (initialEmail) {
+      setEmail(initialEmail);
+      if (initialEmail.startsWith('sup_')) setRole('SUPPLIER');
+      if (initialEmail.startsWith('buy_')) setRole('BUYER');
+    }
+    if (initialRole) setRole(initialRole);
+  }, [initialEmail, initialRole]);
+
+  // Dynamic Signature themes mapped to role selection
+  const themeAccent = role === 'SUPPLIER' ? '#d97706' : '#db2777';
+  const themeGlow = role === 'SUPPLIER' ? 'rgba(217, 119, 6, 0.15)' : 'rgba(219, 39, 119, 0.15)';
 
   const handleQuickFill = () => {
     if (role === 'SUPPLIER') {
@@ -63,23 +41,45 @@ export default function Login({ onLoginSuccess }) {
     setError('');
     setIsLoading(true);
 
-    if (!email || !password) {
-      setError('Please fill in all secure authentication fields.');
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      // Direct hook call out into the processing pipeline
-      const result = await mockApiAuthentication(email, password, role);
+      const loginEndpoint = `${API_BASE_URL.replace('/auth', '')}/auth/login`;
 
-      if (result.success) {
-        onLoginSuccess(result.user);
-      } else {
-        setError(result.message);
+      const response = await fetch(loginEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: email.trim(), 
+          userId: email.trim(), 
+          password, 
+          role 
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || result.error || 'Authentication failed.');
       }
+
+      // Safely extract the user payload whether it's result.user or result directly
+      const userData = result.user || result.data || result;
+
+      // Extract token if provided
+      const token = result.token || result.access_token || userData?.token;
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+
+      // Trigger state change in App.jsx to cause the workspace redirect
+      if (onLoginSuccess && userData) {
+        onLoginSuccess(userData);
+      } else {
+        throw new Error('Invalid user payload received from backend.');
+      }
+
     } catch (err) {
-      setError('Internal clearing node error encountered during validation pass.');
+      console.error('Login error:', err);
+      setError(err.message || 'Unable to complete authentication.');
     } finally {
       setIsLoading(false);
     }
@@ -87,11 +87,9 @@ export default function Login({ onLoginSuccess }) {
 
   return (
     <div style={styles.loginWrapper}>
-      {/* Morphing ambient workspace background blurs */}
-      <div style={{ ...styles.ambientGlowTop, background: `radial-gradient(circle, ${themeGlow} 0%, rgba(9, 13, 22, 0) 70%)` }}></div>
+      <div style={{ ...styles.ambientGlowTop, background: `radial-gradient(circle, ${themeGlow} 0%, rgba(255, 255, 255, 0) 70%)` }}></div>
 
-      <div style={{ ...styles.loginCard, border: `2px solid ${themeAccent}`, boxShadow: `0 15px 40px rgba(0, 0, 0, 0.4), 0 0 20px ${themeGlow}` }}>
-        {/* Brand Identity */}
+      <div style={{ ...styles.loginCard, border: `2px solid ${themeAccent}`, boxShadow: `0 12px 32px rgba(0, 0, 0, 0.08), 0 0 16px ${themeGlow}` }}>
         <div style={styles.brandHeader}>
           <div style={{ ...styles.logoBadge, backgroundColor: themeAccent, boxShadow: `0 4px 14px ${themeGlow}` }}>
             {role === 'SUPPLIER' ? '🚢' : '🛒'}
@@ -100,28 +98,27 @@ export default function Login({ onLoginSuccess }) {
           <p style={styles.subtitle}>Unified Clearing &amp; Regulatory Escrow Environment</p>
         </div>
 
-        {/* Segmented Controller (Tabs) */}
         <div style={styles.portalToggleContainer}>
           <button 
             type="button" 
-            onClick={() => { setRole('SUPPLIER'); setEmail(''); setPassword(''); setError(''); }} 
+            onClick={() => { setRole('SUPPLIER'); setError(''); }} 
             style={{
               ...styles.toggleBtn, 
               ...(role === 'SUPPLIER' ? styles.activeToggleBtn : {}),
-              color: role === 'SUPPLIER' ? '#ffffff' : '#93c5fd',
-              borderColor: role === 'SUPPLIER' ? '#fbbf24' : 'transparent'
+              color: role === 'SUPPLIER' ? '#d97706' : '#64748b',
+              borderColor: role === 'SUPPLIER' ? '#d97706' : 'transparent'
             }}
           >
             Supplier Desk
           </button>
           <button 
             type="button" 
-            onClick={() => { setRole('BUYER'); setEmail(''); setPassword(''); setError(''); }} 
+            onClick={() => { setRole('BUYER'); setError(''); }} 
             style={{
               ...styles.toggleBtn, 
               ...(role === 'BUYER' ? styles.activeToggleBtn : {}),
-              color: role === 'BUYER' ? '#ffffff' : '#93c5fd',
-              borderColor: role === 'BUYER' ? '#ec4899' : 'transparent'
+              color: role === 'BUYER' ? '#db2777' : '#64748b',
+              borderColor: role === 'BUYER' ? '#db2777' : 'transparent'
             }}
           >
             Buyer Desk
@@ -134,19 +131,23 @@ export default function Login({ onLoginSuccess }) {
           </div>
         )}
 
-        {/* Input Form Fields */}
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.inputGroup}>
-            <label style={styles.label}>Corporate Email Address</label>
+            <label style={styles.label}>Corporate Email / Mobile / User ID</label>
             <input 
-              type="email" 
+              type="text" 
               required
               disabled={isLoading}
-              placeholder={role === 'SUPPLIER' ? 'ops@amamaexporters.com' : 'procurement@globalbuy.de'}
+              placeholder={role === 'SUPPLIER' ? 'sup_178549... or ops@amama.com' : 'buy_178549... or buy@global.de'}
               value={email}
               onFocus={() => setFocusedField('email')}
               onBlur={() => setFocusedField(null)}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setEmail(val);
+                if (val.startsWith('sup_')) setRole('SUPPLIER');
+                if (val.startsWith('buy_')) setRole('BUYER');
+              }}
               style={{
                 ...styles.input,
                 ...(focusedField === 'email' ? { borderColor: themeAccent, boxShadow: `0 0 8px ${themeGlow}` } : {})
@@ -178,6 +179,7 @@ export default function Login({ onLoginSuccess }) {
             style={{ 
               ...styles.submitBtn, 
               backgroundColor: themeAccent,
+              color: '#ffffff',
               boxShadow: `0 4px 14px ${themeGlow}`,
               opacity: isLoading ? 0.6 : 1,
               cursor: isLoading ? 'not-allowed' : 'pointer'
@@ -195,6 +197,18 @@ export default function Login({ onLoginSuccess }) {
             ⚡ Quick Seed Sandbox Parameters
           </button>
         </form>
+
+        {onNavigateToOnboarding && (
+          <div style={{ textAlign: 'center', marginTop: '16px' }}>
+            <button 
+              type="button" 
+              onClick={onNavigateToOnboarding} 
+              style={{ background: 'none', border: 'none', color: '#64748b', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}
+            >
+              Need an account? <span style={{ color: themeAccent, textDecoration: 'underline' }}>Start Onboarding</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -206,11 +220,13 @@ const styles = {
     display: 'flex', 
     alignItems: 'center', 
     justifyContent: 'center', 
-    padding: '40px 24px', 
+    padding: '20px 16px', 
     flex: 1,
-    overflow: 'hidden',
-    backgroundColor: '#090d16', // Grounded shell tone
+    overflowY: 'auto', 
+    backgroundColor: '#ffffff',
+    color: '#0f172a',
     width: '100%',
+    minHeight: '100vh',
     boxSizing: 'border-box'
   },
   ambientGlowTop: {
@@ -218,7 +234,8 @@ const styles = {
     top: '-10%',
     left: '50%',
     transform: 'translateX(-50%)',
-    width: '500px',
+    width: '100%',
+    maxWidth: '500px',
     height: '500px',
     zIndex: 1,
     pointerEvents: 'none',
@@ -229,61 +246,67 @@ const styles = {
     zIndex: 10,
     width: '100%', 
     maxWidth: '440px', 
-    backgroundColor: '#1e293b', 
+    backgroundColor: '#ffffff', 
     borderRadius: '16px', 
-    padding: '40px', 
+    padding: '24px 20px', 
     boxSizing: 'border-box',
-    transition: 'all 0.3s ease'
+    transition: 'all 0.3s ease',
+    margin: 'auto 0'
   },
-  brandHeader: { textAlign: 'center', marginBottom: '32px' },
+  brandHeader: { textAlign: 'center', marginBottom: '24px' },
   logoBadge: { 
-    height: '48px', 
-    width: '48px', 
+    height: '44px', 
+    width: '44px', 
     borderRadius: '12px', 
     display: 'flex', 
     alignItems: 'center', 
     justifyContent: 'center', 
-    fontSize: '22px', 
-    margin: '0 auto 16px',
+    fontSize: '20px', 
+    margin: '0 auto 12px',
     transition: 'all 0.3s ease'
   },
-  title: { fontSize: '24px', fontWeight: '900', margin: '0 0 8px', color: '#ffffff', letterSpacing: '-0.5px' },
-  subtitle: { fontSize: '13px', color: '#93c5fd', margin: 0, lineHeight: '1.5', fontWeight: '500' },
+  title: { fontSize: '20px', fontWeight: '900', margin: '0 0 6px', color: '#0f172a', letterSpacing: '-0.5px' },
+  subtitle: { fontSize: '12px', color: '#64748b', margin: 0, lineHeight: '1.4', fontWeight: '500' },
   portalToggleContainer: { 
     display: 'flex', 
     gap: '6px', 
     padding: '4px', 
-    backgroundColor: '#0f172a', 
+    backgroundColor: '#f8fafc', 
     borderRadius: '10px', 
-    border: '2px solid #3b82f6', 
-    marginBottom: '28px' 
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: '#e2e8f0', 
+    marginBottom: '20px' 
   },
   toggleBtn: { 
     flex: 1, 
-    padding: '12px 0', 
+    padding: '10px 4px', 
     border: '1px solid transparent', 
     background: 'none', 
     borderRadius: '8px', 
-    fontSize: '13px', 
+    fontSize: '11px', 
     fontWeight: '800', 
     cursor: 'pointer', 
     transition: 'all 0.2s ease',
     textTransform: 'uppercase',
-    letterSpacing: '0.5px'
+    letterSpacing: '0.5px',
+    whiteSpace: 'nowrap'
   },
   activeToggleBtn: { 
-    backgroundColor: '#1e293b', 
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)'
+    backgroundColor: '#ffffff', 
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)'
   },
-  form: { display: 'flex', flexDirection: 'column', gap: '22px' },
-  inputGroup: { display: 'flex', flexDirection: 'column', gap: '8px' },
-  label: { fontSize: '11px', fontWeight: '800', color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.75px' },
+  form: { display: 'flex', flexDirection: 'column', gap: '16px' },
+  inputGroup: { display: 'flex', flexDirection: 'column', gap: '6px' },
+  label: { fontSize: '11px', fontWeight: '800', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.75px' },
   input: { 
-    padding: '14px 16px', 
+    padding: '12px 14px', 
     borderRadius: '8px', 
-    border: '2px solid #3b82f6', 
-    backgroundColor: '#0f172a', 
-    color: '#ffffff', 
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: '#cbd5e1', 
+    backgroundColor: '#ffffff', 
+    color: '#0f172a', 
     fontSize: '14px', 
     outline: 'none',
     transition: 'all 0.2s ease',
@@ -294,38 +317,37 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
-    backgroundColor: 'rgba(244, 63, 94, 0.1)', 
-    border: '1px solid #f43f5e', 
-    color: '#f43f5e', 
-    padding: '12px 16px', 
+    backgroundColor: '#fff1f2', 
+    border: '1px solid #fecdd3', 
+    color: '#e11d48', 
+    padding: '10px 14px', 
     borderRadius: '8px', 
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: '700',
     lineHeight: '1.4'
   },
   submitBtn: { 
-    color: '#ffffff', 
     border: 'none', 
-    padding: '14px', 
+    padding: '12px', 
     borderRadius: '8px', 
-    fontSize: '13px', 
+    fontSize: '12px', 
     fontWeight: '800', 
-    marginTop: '8px',
+    marginTop: '4px',
     transition: 'all 0.2s ease',
     textTransform: 'uppercase',
     letterSpacing: '0.5px'
   },
   demoFillBtn: { 
-    background: 'none', 
-    border: '2px dashed #3b82f6', 
-    color: '#93c5fd', 
-    padding: '12px', 
+    background: '#f8fafc', 
+    border: '1px dashed #cbd5e1', 
+    color: '#0284c7', 
+    padding: '10px', 
     borderRadius: '8px', 
-    fontSize: '12px', 
+    fontSize: '11px', 
     fontWeight: '800',
     cursor: 'pointer', 
     transition: 'all 0.2s ease',
-    marginTop: '6px',
+    marginTop: '4px',
     textTransform: 'uppercase',
     letterSpacing: '0.5px'
   }

@@ -1,187 +1,318 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function Header({ user, onLogout, publicTab, setPublicTab }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isLoggedIn = !!user;
-  const isSupplier = user?.role === 'SUPPLIER';
-  
-  // High-intensity vibrant accents matching the workspaces
-  const themeColor = isLoggedIn ? (isSupplier ? '#fbbf24' : '#ec4899') : '#38bdf8';
+  const isSupplier = user?.role === 'SUPPLIER' || user?.role === 'SELLER';
+  const isLogistics = user?.role === 'LOGISTICS' || user?.role === 'CARRIER' || user?.role === 'TRANSPORTER';
+  const isAdmin = user?.role === 'ADMIN' || user?.role === 'MASTER_ADMIN';
+
+  // Dynamic vibrant accents matching role workspaces
+  const themeColor = isLoggedIn 
+    ? (isAdmin ? '#60a5fa' : isLogistics ? '#10b981' : isSupplier ? '#fbbf24' : '#ec4899') 
+    : '#38bdf8';
+
+  const handleNavClick = (tab) => {
+    if (setPublicTab) setPublicTab(tab);
+    setMobileMenuOpen(false);
+  };
 
   return (
-    <header style={styles.headerContainer}>
-      <div style={styles.brandGroup} onClick={() => !isLoggedIn && setPublicTab('home')}>
-        <div style={{ ...styles.logoMark, background: themeColor, boxShadow: `0 0 12px ${themeColor}` }}>
-          {isLoggedIn ? (isSupplier ? '🚢' : '🛒') : '✦'}
-        </div>
-        <div>
-          <h1 style={styles.brandName}>AMAMA GLOBAL TRADE</h1>
-          <span style={styles.networkStatus}>
-            
-            
-          </span>
-        </div>
-      </div>
+    <>
+      {/* Dynamic Responsive Stylesheet Injection */}
+      <style>{`
+        .header-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 16px 40px;
+          background-color: rgba(30, 58, 138, 0.85);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border-bottom: 2px solid #2563eb;
+          position: sticky;
+          top: 0;
+          z-index: 1000;
+          box-sizing: border-box;
+          box-shadow: 0 4px 20px rgba(15, 23, 42, 0.3);
+          width: 100%;
+        }
 
-      {/* Navigation Layer */}
-      <div style={styles.navMenu}>
-        {!isLoggedIn ? (
-          <>
-            <button 
-              onClick={() => setPublicTab('home')} 
-              style={{...styles.navLink, color: publicTab === 'home' ? '#ffffff' : '#93c5fd'}}
-            >
-              Home 
-            </button>
-            <button 
-              onClick={() => setPublicTab('register')} 
-              style={{...styles.navLink, color: publicTab === 'register' ? '#ffffff' : '#93c5fd'}}
-            >
-              Apply / Register
-            </button>
-            <button 
-              onClick={() => setPublicTab('login')} 
-              style={{
-                ...styles.loginActionBtn, 
-                backgroundColor: publicTab === 'login' ? '#2563eb' : 'transparent',
-                borderColor: publicTab === 'login' ? '#60a5fa' : '#3b82f6'
-              }}
-            >
-              Sign In
-            </button>
-          </>
-        ) : (
-          /* Locked State Interface details (No extra navigation links displayed) */
-          <div style={styles.roleContextBadge}>
-            <span style={{ color: themeColor, marginRight: '8px', textShadow: `0 0 6px ${themeColor}` }}>●</span>
-            <span style={styles.roleLabel}>
-              {isSupplier ? 'SUPPLIER ENVIRONMENT' : 'BUYER PORTAL'}
+        .hamburger-btn {
+          display: none;
+          background: none;
+          border: none;
+          color: #ffffff;
+          font-size: 24px;
+          cursor: pointer;
+          padding: 4px;
+        }
+
+        .nav-menu {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        /* Tablet Breakpoint (iPads & Small Laptops) */
+        @media (max-width: 900px) {
+          .header-container {
+            padding: 14px 24px;
+          }
+        }
+
+        /* Mobile Breakpoint (Smartphones & Portrait Tabs) */
+        @media (max-width: 680px) {
+          .header-container {
+            padding: 12px 16px;
+            flex-wrap: wrap;
+          }
+
+          .hamburger-btn {
+            display: block;
+          }
+
+          .nav-menu {
+            display: ${mobileMenuOpen ? 'flex' : 'none'};
+            flex-direction: column;
+            width: 100%;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            align-items: stretch;
+            gap: 10px;
+          }
+
+          .mobile-full-width {
+            width: 100%;
+            text-align: center;
+          }
+
+          .user-section-mobile {
+            width: 100%;
+            justify-content: space-between;
+            margin-top: 8px;
+          }
+        }
+      `}</style>
+
+      <header className="header-container">
+        {/* Brand Group */}
+        <div 
+          style={styles.brandGroup} 
+          onClick={() => {
+            if (!isLoggedIn && setPublicTab) handleNavClick('home');
+          }}
+        >
+          <div style={{ ...styles.logoMark, background: themeColor, boxShadow: `0 0 12px ${themeColor}` }}>
+            {isLoggedIn ? (isAdmin ? '🛡️' : isLogistics ? '⚓' : isSupplier ? '📦' : '🛒') : '✦'}
+          </div>
+          <div>
+            <h1 style={styles.brandName}>AMAMA GLOBAL TRADE</h1>
+            <span style={styles.networkStatus}>
+              {isAdmin 
+                ? '🛡️ MASTER ADMIN CONSOLE' 
+                : isLogistics 
+                ? '⚓ LOGISTICS TRACKER ACTIVE' 
+                : '● Operational Gateway'}
             </span>
           </div>
-        )}
-      </div>
-
-      {/* Dynamic Profile Zone */}
-      {isLoggedIn && (
-        <div style={styles.userSection}>
-          <div style={styles.userMeta}>
-            <span style={styles.userName}>{user.companyName}</span>
-            <span style={styles.userRoleText}>{user.email}</span>
-          </div>
-          <button onClick={onLogout} style={styles.logoutBtn}>
-            Sign Out
-          </button>
         </div>
-      )}
-    </header>
+
+        {/* Hamburger Toggle Button for Mobile Screens */}
+        <button 
+          className="hamburger-btn" 
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle Navigation Menu"
+        >
+          {mobileMenuOpen ? '✕' : '☰'}
+        </button>
+
+        {/* Navigation & Action Layer */}
+        <div className="nav-menu">
+          {!isLoggedIn ? (
+            <>
+              <button 
+                className="mobile-full-width"
+                onClick={() => handleNavClick('home')} 
+                style={{
+                  ...styles.navLink, 
+                  color: publicTab === 'home' ? '#ffffff' : '#93c5fd',
+                  borderBottom: publicTab === 'home' ? '2px solid #38bdf8' : 'none'
+                }}
+              >
+                Home
+              </button>
+
+              <button 
+                className="mobile-full-width"
+                onClick={() => handleNavClick('market')} 
+                style={{
+                  ...styles.navLink, 
+                  color: publicTab === 'market' ? '#ffffff' : '#93c5fd',
+                  borderBottom: publicTab === 'market' ? '2px solid #38bdf8' : 'none'
+                }}
+              >
+                Market Overview
+              </button>
+
+              {/* 🚢 Logistics Public Preview Nav Link */}
+              <button 
+                className="mobile-full-width"
+                onClick={() => handleNavClick('logistics')} 
+                style={{
+                  ...styles.navLink, 
+                  color: publicTab === 'logistics' ? '#ffffff' : '#93c5fd',
+                  borderBottom: publicTab === 'logistics' ? '2px solid #10b981' : 'none'
+                }}
+              >
+                🚢 Logistics
+              </button>
+
+              <button 
+                className="mobile-full-width"
+                onClick={() => handleNavClick('register')} 
+                style={{
+                  ...styles.navLink, 
+                  color: publicTab === 'register' ? '#ffffff' : '#93c5fd',
+                  borderBottom: publicTab === 'register' ? '2px solid #38bdf8' : 'none'
+                }}
+              >
+                Apply / Register
+              </button>
+
+              {/* Public ERP Admin Portal Toggle / Preview Link */}
+              <button 
+                className="mobile-full-width"
+                onClick={() => handleNavClick('admin')} 
+                style={{
+                  ...styles.navLink, 
+                  color: publicTab === 'admin' ? '#ffffff' : '#93c5fd',
+                  borderBottom: publicTab === 'admin' ? '2px solid #60a5fa' : 'none'
+                }}
+              >
+                ERP Admin
+              </button>
+
+              <button 
+                className="mobile-full-width"
+                onClick={() => handleNavClick('login')} 
+                style={{
+                  ...styles.loginActionBtn, 
+                  background: publicTab === 'login' ? '#0284c7' : '#0369a1'
+                }}
+              >
+                Sign In
+              </button>
+            </>
+          ) : (
+            <div className="user-section-mobile" style={styles.userSection}>
+              <div style={styles.userInfo}>
+                <span style={styles.userName}>{user.name || user.email || 'Admin Controller'}</span>
+                <span style={{ ...styles.userBadge, borderColor: themeColor, color: themeColor }}>
+                  {user.role || 'ADMIN'}
+                </span>
+              </div>
+              <button 
+                className="mobile-full-width"
+                onClick={onLogout} 
+                style={styles.logoutBtn}
+              >
+                Disconnect
+              </button>
+            </div>
+          )}
+        </div>
+      </header>
+    </>
   );
 }
 
 const styles = {
-  headerContainer: { 
-    display: 'flex', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    padding: '16px 40px', 
-    backgroundColor: 'rgba(30, 58, 138, 0.85)', // Saturated Royal Blue with glass backdrop
-    backdropFilter: 'blur(16px)', 
-    WebkitBackdropFilter: 'blur(16px)',
-    borderBottom: '2px solid #2563eb', 
-    position: 'sticky', 
-    top: 0, 
-    zIndex: 100, 
-    boxSizing: 'border-box',
-    boxShadow: '0 4px 20px rgba(15, 23, 42, 0.3)'
-  },
-  brandGroup: { display: 'flex', alignItems: 'center', gap: '14px', cursor: 'pointer' },
-  logoMark: { 
-    width: '38px', 
-    height: '38px', 
-    borderRadius: '10px', 
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    color: '#0f172a', // Saturated dark glyph contrast
-    fontWeight: '900', 
-    fontSize: '20px',
-    transition: 'transform 0.2s'
-  },
-  brandName: { 
-    margin: 0, 
-    fontSize: '14px', 
-    fontWeight: '900', 
-    letterSpacing: '1.5px', 
-    color: '#ffffff',
-    textShadow: '0 2px 8px rgba(37, 99, 235, 0.4)'
-  },
-  networkStatus: { 
-    fontSize: '11px', 
-    color: '#93c5fd', 
-    fontWeight: '800', 
-    display: 'flex', 
-    alignItems: 'center', 
-    gap: '6px', 
-    marginTop: '2px' 
-  },
-  activeDot: { 
-    width: '8px', 
-    height: '8px', 
-    borderRadius: '50%',
-    boxShadow: '0 0 6px currentColor'
-  },
-  navMenu: { display: 'flex', alignItems: 'center', gap: '20px' },
-  navLink: { 
-    background: 'none', 
-    border: 'none', 
-    fontSize: '13px', 
-    fontWeight: '800', 
-    cursor: 'pointer', 
-    padding: '6px 12px', 
-    transition: 'all 0.2s',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px'
-  },
-  loginActionBtn: { 
-    background: 'none', 
-    border: '2px solid #3b82f6', 
-    color: '#ffffff', 
-    fontSize: '13px', 
-    fontWeight: '800', 
-    cursor: 'pointer', 
-    padding: '8px 20px', 
-    borderRadius: '8px', 
-    transition: 'all 0.2s',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px'
-  },
-  roleContextBadge: { 
-    backgroundColor: '#1e293b', 
-    border: '2px solid #3b82f6', 
-    borderRadius: '20px', 
-    padding: '6px 18px', 
-    display: 'flex', 
-    alignItems: 'center', 
-    fontSize: '11px', 
-    fontWeight: '900', 
-    letterSpacing: '0.75px',
-    boxShadow: '0 0 10px rgba(59, 130, 246, 0.2)'
-  },
-  roleLabel: { color: '#ffffff' },
-  userSection: { display: 'flex', alignItems: 'center', gap: '18px' },
-  userMeta: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end' },
-  userName: { fontSize: '13px', fontWeight: '800', color: '#ffffff' },
-  userRoleText: { fontSize: '11px', color: '#93c5fd', fontWeight: '700' },
-  logoutBtn: { 
-    backgroundColor: '#f43f5e', // Highly dynamic crimson-pink exit button
-    border: 'none', 
-    color: '#ffffff', 
-    padding: '8px 16px', 
-    borderRadius: '8px', 
-    fontSize: '12px', 
-    fontWeight: '800', 
+  brandGroup: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
     cursor: 'pointer',
-    transition: 'all 0.2s',
-    boxShadow: '0 4px 10px rgba(244, 63, 94, 0.3)',
+  },
+  logoMark: {
+    width: '36px',
+    height: '36px',
+    borderRadius: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#0f172a',
+    fontWeight: '900',
+    fontSize: '1.1rem',
+    transition: 'all 0.3s ease',
+  },
+  brandName: {
+    color: '#ffffff',
+    fontSize: '1.05rem',
+    fontWeight: '900',
+    letterSpacing: '0.04em',
+    margin: 0,
+    lineHeight: 1.2,
+  },
+  networkStatus: {
+    color: '#34d399',
+    fontSize: '0.68rem',
+    fontWeight: '700',
+    letterSpacing: '0.05em',
+  },
+  navLink: {
+    background: 'none',
+    border: 'none',
+    padding: '8px 12px',
+    fontWeight: '700',
+    fontSize: '0.88rem',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  },
+  loginActionBtn: {
+    color: '#ffffff',
+    border: '1px solid #38bdf8',
+    padding: '8px 18px',
+    borderRadius: '8px',
+    fontWeight: '800',
+    fontSize: '0.85rem',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  },
+  userSection: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '16px',
+  },
+  userInfo: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+  },
+  userName: {
+    color: '#ffffff',
+    fontSize: '0.85rem',
+    fontWeight: '800',
+  },
+  userBadge: {
+    fontSize: '0.65rem',
+    fontWeight: '800',
+    border: '1px solid',
+    padding: '1px 6px',
+    borderRadius: '4px',
+    marginTop: '2px',
     textTransform: 'uppercase',
-    letterSpacing: '0.5px'
-  }
+  },
+  logoutBtn: {
+    background: 'rgba(239, 68, 68, 0.15)',
+    color: '#fca5a5',
+    border: '1px solid rgba(239, 68, 68, 0.4)',
+    padding: '6px 14px',
+    borderRadius: '6px',
+    fontWeight: '700',
+    fontSize: '0.8rem',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+  },
 };
