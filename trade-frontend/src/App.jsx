@@ -2,20 +2,29 @@ import React, { useState } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './components/Login';
-import OnboardingPortal from './components/OnboardingPortal'; 
+import LogisticsLogin from './components/Logistics/LogisticsLogin'; // 👈 Logistics Login Page
+import OnboardingPortal from './components/OnboardingPortal';
 import LandingPage from './components/LandingPage';
-import SupplierWorkspace from './components/SupplierWorkspace';
 import BuyerWorkspace from './components/BuyerWorkspace';
 import MasterAdminWorkspace from './components/Admin/MasterAdminWorkspace';
-import LiveMarketOverview from "./components/LiveMarketOverview";
-// 🚢 Import the Logistics Portal Component
+import AdminLogin from './components/Admin/AdminLogin';
+import LiveMarketOverview from './components/LiveMarketOverview';
 import LogisticsPortalDocumentGated from './components/Logistics/LogisticsPortal_DocumentGated';
 
+// 🚢 Import Supplier Workspace Component
+import SupplierWorkspaceReplicated from './components/SupplierWorkspace';
+
+// ==========================================
+// Main Application Component
+// ==========================================
 export default function App() {
+  // User auth state
   const [user, setUser] = useState(null);
-  const [publicTab, setPublicTab] = useState('home'); // 'home', 'register', 'login', 'market', 'admin', 'logistics'
   
-  // Dynamic parameters passed into OnboardingPortal (e.g. { desk: 'buyer' } or { desk: 'supplier' })
+  // Active navigation tab for public views
+  const [publicTab, setPublicTab] = useState('home');
+
+  // Dynamic parameters passed into OnboardingPortal
   const [onboardingParams, setOnboardingParams] = useState(null);
 
   // Active HS Code for real-time market overview pages
@@ -40,7 +49,6 @@ export default function App() {
     } else if (targetView === 'admin') {
       setPublicTab('admin');
     } else if (targetView === 'logistics') {
-      // Direct navigation to Logistics Tracking Portal
       setPublicTab('logistics');
     } else if (targetView === 'market') {
       if (payload && payload.hsCode) {
@@ -48,7 +56,6 @@ export default function App() {
       }
       setPublicTab('market');
     } else if (targetView === 'search') {
-      console.log('Search query executed:', payload);
       if (payload?.hsCode) {
         setActiveHsCode(payload.hsCode);
         setPublicTab('market');
@@ -58,9 +65,17 @@ export default function App() {
     }
   };
 
-  // Explicit login completion handler
+  // Explicit login completion handler (with role normalization & fallback protection)
   const handleAuthSuccess = (authenticatedUser) => {
-    setUser(authenticatedUser);
+    if (!authenticatedUser) return;
+
+    // Normalize incoming role field names (role, userType, accountType)
+    const rawRole = authenticatedUser.role || authenticatedUser.userType || authenticatedUser.accountType || 'BUYER';
+    
+    setUser({
+      ...authenticatedUser,
+      role: rawRole.trim().toUpperCase()
+    });
   };
 
   // Called when onboarding completes -> Redirects to Login screen
@@ -79,54 +94,55 @@ export default function App() {
     setPublicTab('home'); 
     setOnboardedInfo({ email: '', role: 'SUPPLIER' });
     setOnboardingParams(null);
+    localStorage.removeItem('adminToken');
   };
 
   // Helper to render workspace cleanly based on normalized user role
   const renderUserWorkspace = () => {
-    const userRole = (user?.role || '').toUpperCase();
+    // Trim and upper-case role to guard against string mismatch bugs
+    const userRole = (user?.role || '').trim().toUpperCase();
 
+    // 1. Admin Workspace Check
     if (userRole === 'ADMIN' || userRole === 'MASTER_ADMIN') {
       return (
         <div style={styles.adminWrapper}>
-          <MasterAdminWorkspace user={user} />
+          <MasterAdminWorkspace user={user} onLogout={handleLogout} onNavigate={handleLandingNavigation} />
         </div>
       );
     }
 
-    // 🚢 Role Check for Dedicated Logistics / Carrier User Account
-    if (userRole === 'LOGISTICS' || userRole === 'CARRIER' || userRole === 'TRANSPORTER') {
+    // 2. Logistics Workspace Check
+    if (userRole === 'LOGISTICS' || userRole === 'CARRIER' || userRole === 'TRANSPORTER' || userRole === 'DRIVER' || userRole === 'DISPATCHER' || userRole === 'FLEET MANAGER') {
       return (
         <div style={styles.logisticsWrapper}>
-          <LogisticsPortalDocumentGated user={user} />
+          <LogisticsPortalDocumentGated user={user} onLogout={handleLogout} onNavigate={handleLandingNavigation} />
         </div>
       );
     }
 
-    if (userRole === 'SUPPLIER' || userRole === 'SELLER') {
+    // 3. 🚢 Supplier / Exporter Workspace
+    if (userRole === 'SUPPLIER' || userRole === 'SELLER' || userRole === 'EXPORTER') {
       return (
         <div style={styles.supplierWrapper}>
-          <SupplierWorkspace user={user} />
-          <div style={styles.authenticatedEngineTrack}>
-            {/* Embedded logistics tracking widget inside Supplier workspace if needed */}
-          </div>
+          <SupplierWorkspaceReplicated 
+            user={user} 
+            onLogout={handleLogout} 
+            onNavigate={handleLandingNavigation} 
+          />
         </div>
       );
     }
 
-    // Default fallback to Buyer Workspace for 'BUYER' or unassigned roles
+    // 4. Buyer Workspace (Default fallback)
     return (
       <div style={styles.buyerWrapper}>
-        <BuyerWorkspace user={user} />
-        <div style={styles.authenticatedEngineTrack}>
-          
-        </div>
+        <BuyerWorkspace user={user} onLogout={handleLogout} onNavigate={handleLandingNavigation} />
       </div>
     );
   };
 
   return (
     <div style={styles.appContainer}>
-      
       <Header 
         user={user} 
         onLogout={handleLogout} 
@@ -135,20 +151,12 @@ export default function App() {
       />
 
       <main style={styles.mainContent}>
-        {/* CASE A: USER IS NOT LOGGED IN */}
         {!user ? (
           <>
-            {/* 1. PUBLIC LANDING PAGE */}
             {publicTab === 'home' && (
-              <>
-                <LandingPage onNavigate={handleLandingNavigation} />
-                <div style={styles.publicSandboxContainer}>
-                  
-                </div>
-              </>
+              <LandingPage onNavigate={handleLandingNavigation} />
             )}
 
-            {/* 2. LIVE REAL-TIME MARKET OVERVIEW PAGE */}
             {publicTab === 'market' && (
               <div style={styles.marketPageContainer}>
                 <LiveMarketOverview 
@@ -158,7 +166,6 @@ export default function App() {
               </div>
             )}
             
-            {/* 3. ONBOARDING PORTAL */}
             {publicTab === 'register' && (
               <div style={styles.authCenteringContainer}>
                 <OnboardingPortal 
@@ -168,7 +175,6 @@ export default function App() {
               </div>
             )}
             
-            {/* 4. LOGIN SCREEN */}
             {publicTab === 'login' && (
               <div style={styles.authCenteringContainer}>
                 <Login 
@@ -183,22 +189,21 @@ export default function App() {
               </div>
             )}
 
-            {/* 5. PUBLIC ADMIN DASHBOARD PREVIEW / SANDBOX VIEW */}
+            {/* SECURED ADMIN LOGIN SCREEN */}
             {publicTab === 'admin' && (
-              <div style={styles.adminWrapper}>
-                <MasterAdminWorkspace />
+              <div style={styles.authCenteringContainer}>
+                <AdminLogin onLoginSuccess={handleAuthSuccess} />
               </div>
             )}
 
-            {/* 🚢 6. PUBLIC LOGISTICS PORTAL SANDBOX / PREVIEW */}
+            {/* LOGISTICS LOGIN PORTAL */}
             {publicTab === 'logistics' && (
-              <div style={styles.logisticsWrapper}>
-                <LogisticsPortalDocumentGated />
+              <div style={styles.logisticsLoginWrapper}>
+                <LogisticsLogin onLoginSuccess={handleAuthSuccess} />
               </div>
             )}
           </>
         ) : (
-          /* CASE B: USER IS LOGGED IN */
           renderUserWorkspace()
         )}
       </main>
@@ -208,6 +213,9 @@ export default function App() {
   );
 }
 
+// ==========================================
+// Workspace Wrapper Styles
+// ==========================================
 const styles = {
   appContainer: {
     display: 'flex',
@@ -238,20 +246,6 @@ const styles = {
     backgroundColor: '#ffffff',
     paddingBottom: '60px'
   },
-  publicSandboxContainer: {
-    width: '100%',
-    maxWidth: '1600px',
-    margin: '0 auto',
-    padding: '0 40px 60px',
-    boxSizing: 'border-box'
-  },
-  authenticatedEngineTrack: {
-    maxWidth: '1600px',
-    width: '100%',
-    margin: '0 auto',
-    padding: '0 40px 40px',
-    boxSizing: 'border-box'
-  },
   adminWrapper: {
     flex: 1,
     display: 'flex',
@@ -261,7 +255,13 @@ const styles = {
     minHeight: 'calc(100vh - 80px)',
     overflow: 'hidden'
   },
-  // 🚢 Added wrapper styling for Logistics Portal
+  logisticsLoginWrapper: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: '#0f172a',
+    width: '100%'
+  },
   logisticsWrapper: {
     flex: 1,
     display: 'flex',
@@ -274,9 +274,9 @@ const styles = {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: '#ffffff',
-    borderTop: '2px solid #fbbf24', 
-    boxShadow: 'inset 0 4px 30px rgba(251, 191, 36, 0.05)'
+    backgroundColor: '#f8fafc',
+    borderTop: '2px solid #059669', 
+    boxShadow: 'inset 0 4px 30px rgba(5, 150, 105, 0.05)'
   },
   buyerWrapper: {
     flex: 1,

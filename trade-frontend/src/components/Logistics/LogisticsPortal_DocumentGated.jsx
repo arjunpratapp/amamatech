@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 
-// MULTI-ORDER DATASET (5 PERISHABLE ORDERS WITH SERVICE TYPES & COUNTRIES)
+// MULTI-ORDER DATASET WITH DUMMY DOCUMENT URLS FOR INTERACTIVITY
 const INITIAL_ORDERS_DATA = [
   {
     orderId: 'ORD-2026-8891',
@@ -31,9 +31,9 @@ const INITIAL_ORDERS_DATA = [
         status: 'COMPLETED',
         isManualLocked: false,
         requiredDocs: [
-          { id: 'd101', name: 'Lot Record Certificate', status: 'VERIFIED', issuer: 'Farm Mgmt', hash: '0x8f2a...4b12', fileName: 'LOT_REC_8891.pdf', reviewNote: 'Approved by Logistics Desk', verifiedAt: '2026-08-01 07:00 IST' },
-          { id: 'd102', name: 'Farm Origin Invoice', status: 'VERIFIED', issuer: 'Producer Desk', hash: '0x3c11...889e', fileName: 'FARM_INV_8891.pdf', reviewNote: 'Invoice verified', verifiedAt: '2026-08-01 07:15 IST' },
-          { id: 'd103', name: 'Animal Health & Traceability Pass', status: 'VERIFIED', issuer: 'District Vet Officer', hash: '0x1a98...33ee', fileName: 'VET_PASS_8891.pdf', reviewNote: 'Primary vet clearance confirmed', verifiedAt: '2026-08-01 07:45 IST' }
+          { id: 'd101', name: 'Lot Record Certificate', status: 'VERIFIED', issuer: 'Farm Mgmt', hash: '0x8f2a...4b12', fileName: 'LOT_REC_8891.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Approved by Logistics Desk', verifiedAt: '2026-08-01 07:00 IST' },
+          { id: 'd102', name: 'Farm Origin Invoice', status: 'VERIFIED', issuer: 'Producer Desk', hash: '0x3c11...889e', fileName: 'FARM_INV_8891.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Invoice verified', verifiedAt: '2026-08-01 07:15 IST' },
+          { id: 'd103', name: 'Animal Health & Traceability Pass', status: 'VERIFIED', issuer: 'District Vet Officer', hash: '0x1a98...33ee', fileName: 'VET_PASS_8891.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Primary vet clearance confirmed', verifiedAt: '2026-08-01 07:45 IST' }
         ]
       },
       {
@@ -44,8 +44,8 @@ const INITIAL_ORDERS_DATA = [
         status: 'COMPLETED',
         isManualLocked: false,
         requiredDocs: [
-          { id: 'd201', name: 'FSSAI License Certificate', status: 'VERIFIED', issuer: 'FSSAI Authority', hash: '0x99a1...11bc', fileName: 'FSSAI_8891.pdf', reviewNote: 'License verified & active', verifiedAt: '2026-08-01 11:00 IST' },
-          { id: 'd202', name: 'Batch Code & QC Inspection Sheet', status: 'VERIFIED', issuer: 'QC Packhouse Unit', hash: '0x7e22...55da', fileName: 'QC_8891.pdf', reviewNote: 'Batch inspection clear', verifiedAt: '2026-08-01 11:30 IST' }
+          { id: 'd201', name: 'FSSAI License Certificate', status: 'VERIFIED', issuer: 'FSSAI Authority', hash: '0x99a1...11bc', fileName: 'FSSAI_8891.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'License verified & active', verifiedAt: '2026-08-01 11:00 IST' },
+          { id: 'd202', name: 'Batch Code & QC Inspection Sheet', status: 'VERIFIED', issuer: 'QC Packhouse Unit', hash: '0x7e22...55da', fileName: 'QC_8891.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Batch inspection clear', verifiedAt: '2026-08-01 11:30 IST' }
         ]
       },
       {
@@ -56,8 +56,8 @@ const INITIAL_ORDERS_DATA = [
         status: 'IN_PROGRESS',
         isManualLocked: false,
         requiredDocs: [
-          { id: 'd301', name: 'RCMC Certificate (APEDA)', status: 'VERIFIED', issuer: 'APEDA India', hash: '0x12a4...998f', fileName: 'APEDA_RCMC.pdf', reviewNote: 'Registration active', verifiedAt: '2026-08-01 14:00 IST' },
-          { id: 'd302', name: 'NABL Lab Test Report (Residue)', status: 'PENDING_REVIEW', issuer: 'NABL Testing Lab', hash: '0x88d1...22ef', fileName: 'NABL_REPORT.pdf', reviewNote: 'Awaiting Logistics Admin signoff', verifiedAt: null }
+          { id: 'd301', name: 'RCMC Certificate (APEDA)', status: 'VERIFIED', issuer: 'APEDA India', hash: '0x12a4...998f', fileName: 'APEDA_RCMC.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Registration active', verifiedAt: '2026-08-01 14:00 IST' },
+          { id: 'd302', name: 'NABL Lab Test Report (Residue)', status: 'PENDING_REVIEW', issuer: 'NABL Testing Lab', hash: '0x88d1...22ef', fileName: 'NABL_REPORT.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Awaiting Logistics Admin signoff', verifiedAt: null }
         ]
       },
       {
@@ -68,7 +68,7 @@ const INITIAL_ORDERS_DATA = [
         status: 'LOCKED',
         isManualLocked: false,
         requiredDocs: [
-          { id: 'd401', name: 'Meat.Net / EIC e-Health Certificate', status: 'MISSING', issuer: 'EIC Portal', hash: null, fileName: null, reviewNote: '', verifiedAt: null }
+          { id: 'd401', name: 'Meat.Net / EIC e-Health Certificate', status: 'MISSING', issuer: 'EIC Portal', hash: null, fileName: null, url: null, reviewNote: '', verifiedAt: null }
         ]
       },
       {
@@ -79,7 +79,7 @@ const INITIAL_ORDERS_DATA = [
         status: 'LOCKED',
         isManualLocked: false,
         requiredDocs: [
-          { id: 'd501', name: 'Reefer E-Way Bill & GPS Temp Log', status: 'MISSING', issuer: 'Transporters', hash: null, fileName: null, reviewNote: '', verifiedAt: null }
+          { id: 'd501', name: 'Reefer E-Way Bill & GPS Temp Log', status: 'MISSING', issuer: 'Transporters', hash: null, fileName: null, url: null, reviewNote: '', verifiedAt: null }
         ]
       }
     ]
@@ -113,7 +113,7 @@ const INITIAL_ORDERS_DATA = [
         status: 'COMPLETED',
         isManualLocked: false,
         requiredDocs: [
-          { id: 'd101', name: 'Lot Record Certificate', status: 'VERIFIED', issuer: 'Farm Mgmt', hash: '0xa11b...9902', fileName: 'LOT_SPICE_8892.pdf', reviewNote: 'Approved', verifiedAt: '2026-08-01 08:30 IST' }
+          { id: 'd101', name: 'Lot Record Certificate', status: 'VERIFIED', issuer: 'Farm Mgmt', hash: '0xa11b...9902', fileName: 'LOT_SPICE_8892.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Approved', verifiedAt: '2026-08-01 08:30 IST' }
         ]
       },
       {
@@ -124,8 +124,8 @@ const INITIAL_ORDERS_DATA = [
         status: 'IN_PROGRESS',
         isManualLocked: false,
         requiredDocs: [
-          { id: 'd201', name: 'FSSAI Spice License', status: 'VERIFIED', issuer: 'FSSAI Authority', hash: '0x33b1...776a', fileName: 'FSSAI_SPICE_8892.pdf', reviewNote: 'Approved', verifiedAt: '2026-08-01 12:30 IST' },
-          { id: 'd202', name: 'Aflatoxin QC Test Sheet', status: 'PENDING_REVIEW', issuer: 'QC Unit', hash: '0x9911...4400', fileName: 'AFLATOXIN_TEST.pdf', reviewNote: 'Awaiting laboratory verification', verifiedAt: null }
+          { id: 'd201', name: 'FSSAI Spice License', status: 'VERIFIED', issuer: 'FSSAI Authority', hash: '0x33b1...776a', fileName: 'FSSAI_SPICE_8892.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Approved', verifiedAt: '2026-08-01 12:30 IST' },
+          { id: 'd202', name: 'Aflatoxin QC Test Sheet', status: 'PENDING_REVIEW', issuer: 'QC Unit', hash: '0x9911...4400', fileName: 'AFLATOXIN_TEST.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Awaiting laboratory verification', verifiedAt: null }
         ]
       },
       {
@@ -135,7 +135,7 @@ const INITIAL_ORDERS_DATA = [
         location: 'Spice Lab Facility',
         status: 'LOCKED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd301', name: 'APEDA RCMC Registration', status: 'MISSING', issuer: 'APEDA', hash: null, fileName: null, reviewNote: '', verifiedAt: null }]
+        requiredDocs: [{ id: 'd301', name: 'APEDA RCMC Registration', status: 'MISSING', issuer: 'APEDA', hash: null, fileName: null, url: null, reviewNote: '', verifiedAt: null }]
       },
       {
         id: 'step-4',
@@ -144,7 +144,7 @@ const INITIAL_ORDERS_DATA = [
         location: 'Plant Quarantine Station',
         status: 'LOCKED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd401', name: 'Phytosanitary Clearance', status: 'MISSING', issuer: 'Phyto Dept', hash: null, fileName: null, reviewNote: '', verifiedAt: null }]
+        requiredDocs: [{ id: 'd401', name: 'Phytosanitary Clearance', status: 'MISSING', issuer: 'Phyto Dept', hash: null, fileName: null, url: null, reviewNote: '', verifiedAt: null }]
       },
       {
         id: 'step-5',
@@ -153,7 +153,7 @@ const INITIAL_ORDERS_DATA = [
         location: 'Mumbai Port Gate 4',
         status: 'LOCKED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd501', name: 'Port Gate Pass & E-Way Bill', status: 'MISSING', issuer: 'Transporter', hash: null, fileName: null, reviewNote: '', verifiedAt: null }]
+        requiredDocs: [{ id: 'd501', name: 'Port Gate Pass & E-Way Bill', status: 'MISSING', issuer: 'Transporter', hash: null, fileName: null, url: null, reviewNote: '', verifiedAt: null }]
       }
     ]
   },
@@ -185,7 +185,7 @@ const INITIAL_ORDERS_DATA = [
         location: 'Ratnagiri Orchard Packhouse',
         status: 'COMPLETED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd101', name: 'Mango Orchard Traceability Cert', status: 'VERIFIED', issuer: 'State Horticulture', hash: '0x712a...1100', fileName: 'ORCHARD_TRACE_8893.pdf', reviewNote: 'Verified', verifiedAt: '2026-08-01 05:00 IST' }]
+        requiredDocs: [{ id: 'd101', name: 'Mango Orchard Traceability Cert', status: 'VERIFIED', issuer: 'State Horticulture', hash: '0x712a...1100', fileName: 'ORCHARD_TRACE_8893.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Verified', verifiedAt: '2026-08-01 05:00 IST' }]
       },
       {
         id: 'step-2',
@@ -194,7 +194,7 @@ const INITIAL_ORDERS_DATA = [
         location: 'Vapour Heat Treatment Facility',
         status: 'COMPLETED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd201', name: 'VHT / Irradiation Treatment Record', status: 'VERIFIED', issuer: 'MSAMB Facility', hash: '0x9922...44bb', fileName: 'IRRADIATION_CERT.pdf', reviewNote: 'Treatment confirmed', verifiedAt: '2026-08-01 10:00 IST' }]
+        requiredDocs: [{ id: 'd201', name: 'VHT / Irradiation Treatment Record', status: 'VERIFIED', issuer: 'MSAMB Facility', hash: '0x9922...44bb', fileName: 'IRRADIATION_CERT.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Treatment confirmed', verifiedAt: '2026-08-01 10:00 IST' }]
       },
       {
         id: 'step-3',
@@ -203,7 +203,7 @@ const INITIAL_ORDERS_DATA = [
         location: 'APEDA Export Certification Unit',
         status: 'COMPLETED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd301', name: 'APEDA Mango.Net Traceability Pass', status: 'VERIFIED', issuer: 'APEDA Portal', hash: '0x5544...11aa', fileName: 'MANGONET_PASS.pdf', reviewNote: 'Traceability validated', verifiedAt: '2026-08-01 14:30 IST' }]
+        requiredDocs: [{ id: 'd301', name: 'APEDA Mango.Net Traceability Pass', status: 'VERIFIED', issuer: 'APEDA Portal', hash: '0x5544...11aa', fileName: 'MANGONET_PASS.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Traceability validated', verifiedAt: '2026-08-01 14:30 IST' }]
       },
       {
         id: 'step-4',
@@ -212,7 +212,7 @@ const INITIAL_ORDERS_DATA = [
         location: 'NPQS Quarantine Office',
         status: 'IN_PROGRESS',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd401', name: 'Phytosanitary Export Health Certificate', status: 'PENDING_REVIEW', issuer: 'NPQS Authority', hash: '0x8877...22cc', fileName: 'PHYTO_UK_EXPORT.pdf', reviewNote: 'Awaiting final signoff', verifiedAt: null }]
+        requiredDocs: [{ id: 'd401', name: 'Phytosanitary Export Health Certificate', status: 'PENDING_REVIEW', issuer: 'NPQS Authority', hash: '0x8877...22cc', fileName: 'PHYTO_UK_EXPORT.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Awaiting final signoff', verifiedAt: null }]
       },
       {
         id: 'step-5',
@@ -221,7 +221,7 @@ const INITIAL_ORDERS_DATA = [
         location: 'Mumbai Airport Gate 2',
         status: 'LOCKED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd501', name: 'Air Waybill (AWB) & Customs Pass', status: 'MISSING', issuer: 'Air India Cargo', hash: null, fileName: null, reviewNote: '', verifiedAt: null }]
+        requiredDocs: [{ id: 'd501', name: 'Air Waybill (AWB) & Customs Pass', status: 'MISSING', issuer: 'Air India Cargo', hash: null, fileName: null, url: null, reviewNote: '', verifiedAt: null }]
       }
     ]
   },
@@ -254,784 +254,801 @@ const INITIAL_ORDERS_DATA = [
         status: 'IN_PROGRESS',
         isManualLocked: false,
         requiredDocs: [
-          { id: 'd101', name: 'GMP Manufacturing Batch Record', status: 'VERIFIED', issuer: 'BioHealth Quality Unit', hash: '0x1122...3344', fileName: 'GMP_BATCH_8894.pdf', reviewNote: 'GMP compliant', verifiedAt: '2026-08-01 11:30 IST' },
-          { id: 'd102', name: 'Cold-Chain Validation Certificate', status: 'PENDING_REVIEW', issuer: 'Bio-Calibration Desk', hash: '0x5566...7788', fileName: 'COLD_VAL_8894.pdf', reviewNote: 'Under calibration audit', verifiedAt: null }
+          { id: 'd101', name: 'GMP Manufacturing Batch Record', status: 'VERIFIED', issuer: 'BioHealth QC', hash: '0x1234...5678', fileName: 'GMP_BATCH_8894.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Passed QC', verifiedAt: '2026-08-01 11:30 IST' }
         ]
       },
       {
         id: 'step-2',
         stageNumber: '02',
         stageName: 'Cold Vault Packaging',
-        location: 'Cold Storage Vault Gate 1',
+        location: 'CryoVault Bengaluru',
         status: 'LOCKED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd201', name: 'Vacuum Insulation Packaging Log', status: 'MISSING', issuer: 'CryoShield', hash: null, fileName: null, reviewNote: '', verifiedAt: null }]
+        requiredDocs: [{ id: 'd201', name: 'Cryo Validation Report', status: 'MISSING', issuer: 'CryoShield', hash: null, fileName: null, url: null, reviewNote: '', verifiedAt: null }]
       },
       {
         id: 'step-3',
         stageNumber: '03',
         stageName: 'CDSCO & Lab Clearance',
-        location: 'Central Drug Lab Office',
+        location: 'CDSCO Inspection Office',
         status: 'LOCKED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd301', name: 'CDSCO Export No-Objection Cert', status: 'MISSING', issuer: 'CDSCO', hash: null, fileName: null, reviewNote: '', verifiedAt: null }]
+        requiredDocs: [{ id: 'd301', name: 'CDSCO Export NOC', status: 'MISSING', issuer: 'CDSCO', hash: null, fileName: null, url: null, reviewNote: '', verifiedAt: null }]
       },
       {
         id: 'step-4',
         stageNumber: '04',
         stageName: 'Export Health Certificate',
-        location: 'Customs Health Desk',
+        location: 'DCGI Office',
         status: 'LOCKED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd401', name: 'DGFT Export License (Pharma)', status: 'MISSING', issuer: 'DGFT', hash: null, fileName: null, reviewNote: '', verifiedAt: null }]
+        requiredDocs: [{ id: 'd401', name: 'DCGI Clearance Pass', status: 'MISSING', issuer: 'DCGI', hash: null, fileName: null, url: null, reviewNote: '', verifiedAt: null }]
       },
       {
         id: 'step-5',
         stageNumber: '05',
         stageName: 'Reef-Air Express',
-        location: 'Bengaluru Cargo Gate 3',
+        location: 'Changi Cold Freight Hub',
         status: 'LOCKED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd501', name: 'Temperature Log Manifest & Airway Pass', status: 'MISSING', issuer: 'Airlines Cargo', hash: null, fileName: null, reviewNote: '', verifiedAt: null }]
+        requiredDocs: [{ id: 'd501', name: 'Air Freight Reefer Manifest', status: 'MISSING', issuer: 'Singapore Freight', hash: null, fileName: null, url: null, reviewNote: '', verifiedAt: null }]
       }
     ]
   },
   {
     orderId: 'ORD-2026-8895',
-    cargo: 'Chilled Seafood & Tiger Prawns (450 kg)',
-    serviceType: "Buyer's Consolidation",
+    cargo: 'Fresh Marine Seafood (300 kg)',
+    serviceType: 'Ocean Freight',
     destinationCountry: 'Japan',
-    destination: 'Tokyo (NRT), Japan',
-    driver: 'K. Parthiban (KL-07-CX-8822)',
-    tempTelemetry: '+1.8 °C (Strict Chilled Storage)',
-    originLocation: 'Kochi Seafood Processing Hub, Kerala',
-    currentLocation: 'Kochi Port Terminal Checkpost',
-    finalLocation: 'Cochin International Airport Air Cargo',
-    trackingProgressPct: 92,
-    eta: 'Today, 2026-08-01 @ 21:00 IST',
+    destination: 'Tokyo Port, Japan',
+    driver: 'K. Parthiban (TN-02-CC-8812)',
+    tempTelemetry: '-2.4 °C (Iced Slurry)',
+    originLocation: 'Kochi Harbor Cold Storage, Kerala',
+    currentLocation: 'Chennai Port Container Yard',
+    finalLocation: 'Kochi Ocean Port Terminal',
+    trackingProgressPct: 100,
+    eta: 'Delivered @ Tokyo Port (Completed)',
     vendorChain: [
-      { stage: '01 - Coastal Aquaculture Unit', vendorName: 'Kerala Ocean Farms Co-Op', handler: 'K. V. Thomas', contact: '+91-9847011223', timestamp: '2026-08-01 04:00 IST', status: 'HANDOFF_COMPLETE' },
-      { stage: '02 - Cold Sorting & Vacuum Pack', vendorName: 'Cochin Marine Packers', handler: 'M. S. Menon', contact: '+91-9847022334', timestamp: '2026-08-01 09:00 IST', status: 'HANDOFF_COMPLETE' },
-      { stage: '03 - MPEDA & Microbiological Testing', vendorName: 'MPEDA Quality Control Lab', handler: 'Dr. S. Pillai', contact: '+91-9847033445', timestamp: '2026-08-01 13:00 IST', status: 'HANDOFF_COMPLETE' },
-      { stage: '04 - Health & Export Sanitize Cert', vendorName: 'EIC Marine Export Authority', handler: 'Officer George', contact: '+91-9847044556', timestamp: '2026-08-01 16:00 IST', status: 'IN_CUSTODY' },
-      { stage: '05 - Reef-Air Express Transport', vendorName: 'Kochi Air Reefer Express', handler: 'K. Parthiban', contact: '+91-9847055667', timestamp: 'Pending Arrival', status: 'SCHEDULED' }
+      { stage: '01 - Marine Harvest Dock', vendorName: 'Kochi Harbor Fisheries Co-Op', handler: 'K. Parthiban', contact: '+91-9844112233', timestamp: '2026-07-28 05:00 IST', status: 'HANDOFF_COMPLETE' },
+      { stage: '02 - Processing & Packing', vendorName: 'Kerala CryoSeafood Packers', handler: 'M. Nair', contact: '+91-9855223344', timestamp: '2026-07-28 10:00 IST', status: 'HANDOFF_COMPLETE' },
+      { stage: '03 - MPEDA Reg. & Testing', vendorName: 'MPEDA Export Quality Lab', handler: 'Dr. C. Joseph', contact: '+91-9866334455', timestamp: '2026-07-29 14:00 IST', status: 'HANDOFF_COMPLETE' },
+      { stage: '04 - Health & Catch Certificate', vendorName: 'Export Inspection Agency Kochi', handler: 'Officer T. George', contact: '+91-9877445566', timestamp: '2026-07-30 09:00 IST', status: 'HANDOFF_COMPLETE' },
+      { stage: '05 - Reef Ocean Freight', vendorName: 'Pacific Express Lines', handler: 'Capt. Tanaka', contact: '+81-9011223344', timestamp: '2026-08-01 08:00 JST', status: 'HANDOFF_COMPLETE' }
     ],
     milestones: [
       {
         id: 'step-1',
         stageNumber: '01',
-        stageName: 'Coastal Aquaculture Unit',
-        location: 'Kochi Coastal Processing Hub',
+        stageName: 'Marine Harvest Dock',
+        location: 'Kochi Harbor Terminal',
         status: 'COMPLETED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd101', name: 'Aquaculture Origin Pass', status: 'VERIFIED', issuer: 'Coastal Aquaculture Authority', hash: '0x8899...1122', fileName: 'AQUA_ORIGIN_8895.pdf', reviewNote: 'Origin verified', verifiedAt: '2026-08-01 05:00 IST' }]
+        requiredDocs: [{ id: 'd101', name: 'Catch Log & Harbor Origin Pass', status: 'VERIFIED', issuer: 'Kochi Harbor Auth', hash: '0x9001...22ff', fileName: 'CATCH_LOG_8895.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Verified origin', verifiedAt: '2026-07-28 06:00 IST' }]
       },
       {
         id: 'step-2',
         stageNumber: '02',
-        stageName: 'Cold Sorting & Vacuum Pack',
-        location: 'Cochin Chilled Packhouse',
+        stageName: 'Processing & Packing',
+        location: 'Kerala Processing Center',
         status: 'COMPLETED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd201', name: 'HACCP Compliance Certificate', status: 'VERIFIED', issuer: 'Food Safety Board', hash: '0x4455...6677', fileName: 'HACCP_SEAFOOD.pdf', reviewNote: 'HACCP verified', verifiedAt: '2026-08-01 10:00 IST' }]
+        requiredDocs: [{ id: 'd201', name: 'Seafood EU/Japan Hygiene Cert', status: 'VERIFIED', issuer: 'Packhouse QC', hash: '0x8002...33ee', fileName: 'HYGIENE_CERT.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Clear', verifiedAt: '2026-07-28 11:00 IST' }]
       },
       {
         id: 'step-3',
         stageNumber: '03',
-        stageName: 'MPEDA & Lab Testing',
-        location: 'MPEDA NABL Marine Lab',
+        stageName: 'MPEDA Reg. & Testing',
+        location: 'MPEDA Testing Facility',
         status: 'COMPLETED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd301', name: 'Antibiotic & Heavy Metal Test Report', status: 'VERIFIED', issuer: 'MPEDA Lab', hash: '0x1122...3344', fileName: 'MPEDA_TEST_PASS.pdf', reviewNote: 'Residue-free pass', verifiedAt: '2026-08-01 13:30 IST' }]
+        requiredDocs: [{ id: 'd301', name: 'MPEDA Catch Quality Clearance', status: 'VERIFIED', issuer: 'MPEDA India', hash: '0x7003...44dd', fileName: 'MPEDA_PASS.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Lab cleared', verifiedAt: '2026-07-29 15:00 IST' }]
       },
       {
         id: 'step-4',
         stageNumber: '04',
-        stageName: 'Health & Export Sanitize Cert',
-        location: 'Export Inspection Council (EIC) Desk',
-        status: 'IN_PROGRESS',
+        stageName: 'Health & Catch Certificate',
+        location: 'EIA Office Kochi',
+        status: 'COMPLETED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd401', name: 'EIC Health Certificate for Japan Export', status: 'PENDING_REVIEW', issuer: 'EIC Officer', hash: '0x7788...9900', fileName: 'EIC_JAPAN_HEALTH.pdf', reviewNote: 'Awaiting inspector approval', verifiedAt: null }]
+        requiredDocs: [{ id: 'd401', name: 'Health Certificate for Japan Export', status: 'VERIFIED', issuer: 'EIA Authority', hash: '0x6004...55cc', fileName: 'HEALTH_JAPAN.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Export clearance complete', verifiedAt: '2026-07-30 10:00 IST' }]
       },
       {
         id: 'step-5',
         stageNumber: '05',
-        stageName: 'Reef-Air Express Transport',
-        location: 'Cochin Cargo Terminal Airside',
-        status: 'LOCKED',
+        stageName: 'Reef Ocean Freight',
+        location: 'Tokyo Ocean Freight Berth',
+        status: 'COMPLETED',
         isManualLocked: false,
-        requiredDocs: [{ id: 'd501', name: 'Airlines Cold-Chain Waybill & Customs Clearance', status: 'MISSING', issuer: 'Air Cargo Freight', hash: null, fileName: null, reviewNote: '', verifiedAt: null }]
+        requiredDocs: [{ id: 'd501', name: 'Bill of Lading & Custom Discharge', status: 'VERIFIED', issuer: 'Pacific Lines', hash: '0x5005...66bb', fileName: 'BL_TOKYO.pdf', url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf', reviewNote: 'Delivered & Escrow Settled', verifiedAt: '2026-08-01 09:00 JST' }]
       }
     ]
   }
 ];
 
-export default function LogisticsPortalDocumentGated() {
+export default function LogisticsWorkspace({ user }) {
   const [orders, setOrders] = useState(INITIAL_ORDERS_DATA);
+  const [selectedOrderId, setSelectedOrderId] = useState('ORD-2026-8891');
+  const [selectedStageId, setSelectedStageId] = useState('step-3');
+
+  // Filters
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // NEW FILTER STATES
-  const [selectedService, setSelectedService] = useState('ALL');
-  const [selectedCountry, setSelectedCountry] = useState('ALL');
+  const [selectedServiceFilter, setSelectedServiceFilter] = useState('ALL');
+  const [selectedCountryFilter, setSelectedCountryFilter] = useState('ALL');
 
-  const [activeOrderId, setActiveOrderId] = useState('ORD-2026-8891');
-  const [activeStepId, setActiveStepId] = useState('step-1');
-  const [isLogisticsAdminMode, setIsLogisticsAdminMode] = useState(true);
-  const [reviewModalDoc, setReviewModalDoc] = useState(null);
-  const [previewDocModal, setPreviewDocModal] = useState(null);
-  const [reviewNoteInput, setReviewNoteInput] = useState('');
-  const [toast, setToast] = useState('');
+  // Toast / Banner
+  const [toastMessage, setToastMessage] = useState('');
 
-  const triggerToast = (msg) => {
-    setToast(msg);
-    setTimeout(() => setToast(''), 3500);
-  };
+  // Upload modal state
+  const [uploadModalState, setUploadModalState] = useState({
+    isOpen: false,
+    orderId: null,
+    milestoneId: null,
+    docId: null,
+    docName: ''
+  });
+  const [uploadFileName, setUploadFileName] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
 
-  // DYNAMIC COUNTRY LIST CREATION
-  const availableCountries = useMemo(() => {
-    const countries = new Set(orders.map(o => o.destinationCountry));
-    return ['ALL', ...Array.from(countries)];
-  }, [orders]);
+  // Derived Active Order & Milestone
+  const activeOrder = useMemo(() => {
+    return orders.find(o => o.orderId === selectedOrderId) || orders[0];
+  }, [orders, selectedOrderId]);
 
-  // COMBINED SEARCH AND FILTER FUNCTIONALITY
+  const activeMilestone = useMemo(() => {
+    if (!activeOrder) return null;
+    return activeOrder.milestones.find(m => m.id === selectedStageId) || activeOrder.milestones[0];
+  }, [activeOrder, selectedStageId]);
+
+  // Derived Filtered Orders
   const filteredOrders = useMemo(() => {
     return orders.filter(o => {
-      const matchesSearch = 
-        o.orderId.toLowerCase().includes(searchQuery.toLowerCase()) || 
-        o.cargo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        o.currentLocation.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        o.destination.toLowerCase().includes(searchQuery.toLowerCase());
-
-      const matchesService = selectedService === 'ALL' || o.serviceType === selectedService;
-      const matchesCountry = selectedCountry === 'ALL' || o.destinationCountry === selectedCountry;
-
+      const matchesSearch = o.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            o.cargo.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            o.destination.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesService = selectedServiceFilter === 'ALL' || o.serviceType === selectedServiceFilter;
+      const matchesCountry = selectedCountryFilter === 'ALL' || o.destinationCountry === selectedCountryFilter;
       return matchesSearch && matchesService && matchesCountry;
     });
-  }, [orders, searchQuery, selectedService, selectedCountry]);
+  }, [orders, searchQuery, selectedServiceFilter, selectedCountryFilter]);
 
-  const currentOrder = useMemo(() => {
-    return orders.find(o => o.orderId === activeOrderId) || filteredOrders[0] || orders[0];
-  }, [orders, activeOrderId, filteredOrders]);
-
-  const currentStep = useMemo(() => {
-    return currentOrder.milestones.find(m => m.id === activeStepId) || currentOrder.milestones[0];
-  }, [currentOrder, activeStepId]);
-
-  const toggleStageLock = (stageId) => {
-    setOrders(prevOrders => prevOrders.map(ord => {
-      if (ord.orderId !== activeOrderId) return ord;
-
-      const updatedMilestones = ord.milestones.map(ms => {
-        if (ms.id !== stageId) return ms;
-
-        const willBeLocked = ms.status !== 'LOCKED';
-        return {
-          ...ms,
-          status: willBeLocked ? 'LOCKED' : 'IN_PROGRESS',
-          isManualLocked: willBeLocked
-        };
-      });
-
-      return { ...ord, milestones: updatedMilestones };
-    }));
-
-    const isNowLocked = currentStep.status !== 'LOCKED';
-    triggerToast(isNowLocked ? `🔒 Stage ${currentStep.stageNumber} manually LOCKED by Logistics Desk` : `🔓 Stage ${currentStep.stageNumber} UNLOCKED by Logistics Desk`);
+  const triggerToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 4500);
   };
 
-  const handleForceReReview = (e, doc) => {
-    e.stopPropagation();
-    setReviewModalDoc({ ...doc, forceOverride: true });
-    setReviewNoteInput(doc.reviewNote || '');
-  };
+  // HANDLER: Review / Approve Document
+  const handleApproveDocument = (orderId, milestoneId, docId) => {
+    setOrders(prevOrders => {
+      return prevOrders.map(ord => {
+        if (ord.orderId !== orderId) return ord;
 
-  const handleReviewDecision = (docId, newStatus) => {
-    const timestamp = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+        const updatedMilestones = ord.milestones.map(ms => {
+          if (ms.id !== milestoneId) return ms;
 
-    setOrders(prevOrders => prevOrders.map(ord => {
-      if (ord.orderId !== activeOrderId) return ord;
+          const updatedDocs = ms.requiredDocs.map(doc => {
+            if (doc.id !== docId) return doc;
+            return {
+              ...doc,
+              status: 'VERIFIED',
+              reviewNote: 'Approved by Logistics Admin',
+              verifiedAt: new Date().toLocaleDateString('en-US') + ' ' + new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) + ' IST',
+              hash: doc.hash || '0x' + Math.random().toString(16).substr(2, 8) + '...' + Math.random().toString(16).substr(2, 4)
+            };
+          });
 
-      const updatedMilestones = ord.milestones.map(ms => {
-        if (ms.id !== activeStepId) return ms;
-
-        const updatedDocs = ms.requiredDocs.map(doc => {
-          if (doc.id !== docId) return doc;
+          // Check if all documents in this stage are now VERIFIED
+          const allDocsVerified = updatedDocs.every(d => d.status === 'VERIFIED');
+          const newStageStatus = allDocsVerified ? 'COMPLETED' : ms.status;
 
           return {
-            ...doc,
-            status: newStatus,
-            verifiedAt: newStatus === 'VERIFIED' ? timestamp : null,
-            reviewNote: reviewNoteInput || (
-              newStatus === 'VERIFIED' 
-                ? `Approved by Logistics Manager @ ${timestamp}` 
-                : `STATUS REVERTED TO RE-REVIEW BY LOGISTICS MANAGER @ ${timestamp}`
-            )
+            ...ms,
+            status: newStageStatus,
+            requiredDocs: updatedDocs
           };
         });
 
-        const allDone = updatedDocs.every(d => d.status === 'VERIFIED');
+        // Auto-unlock next milestone if current is COMPLETED
+        let newlyUnlockedMilestones = [...updatedMilestones];
+        const currentIdx = newlyUnlockedMilestones.findIndex(m => m.id === milestoneId);
+        if (currentIdx !== -1 && newlyUnlockedMilestones[currentIdx].status === 'COMPLETED' && currentIdx + 1 < newlyUnlockedMilestones.length) {
+          if (newlyUnlockedMilestones[currentIdx + 1].status === 'LOCKED' && !newlyUnlockedMilestones[currentIdx + 1].isManualLocked) {
+            newlyUnlockedMilestones[currentIdx + 1] = {
+              ...newlyUnlockedMilestones[currentIdx + 1],
+              status: 'IN_PROGRESS'
+            };
+          }
+        }
+
+        // Recalculate progress percentage
+        const completedCount = newlyUnlockedMilestones.filter(m => m.status === 'COMPLETED').length;
+        const newProgress = Math.round((completedCount / newlyUnlockedMilestones.length) * 100);
 
         return {
-          ...ms,
-          requiredDocs: updatedDocs,
-          status: allDone ? 'COMPLETED' : 'IN_PROGRESS'
+          ...ord,
+          trackingProgressPct: newProgress,
+          milestones: newlyUnlockedMilestones
         };
       });
+    });
 
-      return { ...ord, milestones: updatedMilestones };
-    }));
+    triggerToast(`✅ Document verified on cryptographic ledger! Stage updated.`);
+  };
 
-    setReviewModalDoc(null);
-    setReviewNoteInput('');
+  // HANDLER: Toggle Manual Lock / Freeze
+  const handleToggleStageLock = (orderId, milestoneId) => {
+    setOrders(prevOrders => {
+      return prevOrders.map(ord => {
+        if (ord.orderId !== orderId) return ord;
 
-    if (newStatus === 'PENDING_REVIEW') {
-      triggerToast(`⚠️ Document status reverted to RE-REVIEW. Stage unlocked for re-inspection.`);
-    } else if (newStatus === 'VERIFIED') {
-      triggerToast(`✅ Document APPROVED & Verified by Logistics Manager.`);
-    } else {
-      triggerToast(`❌ Document REJECTED. Submitter / Carrier notified.`);
+        const updatedMilestones = ord.milestones.map(ms => {
+          if (ms.id !== milestoneId) return ms;
+
+          const willLock = !ms.isManualLocked;
+          return {
+            ...ms,
+            isManualLocked: willLock,
+            status: willLock ? 'LOCKED' : (ms.requiredDocs.every(d => d.status === 'VERIFIED') ? 'COMPLETED' : 'IN_PROGRESS')
+          };
+        });
+
+        return {
+          ...ord,
+          milestones: updatedMilestones
+        };
+      });
+    });
+
+    triggerToast(`🔒 Milestone manual lock state toggled! Control updated.`);
+  };
+
+  // HANDLER: Local File Selection
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedFile(file);
+      if (!uploadFileName) {
+        setUploadFileName(file.name);
+      }
     }
   };
 
-  const resetAllFilters = () => {
-    setSearchQuery('');
-    setSelectedService('ALL');
-    setSelectedCountry('ALL');
+  // HANDLER: Upload File Submission
+  const handleUploadSubmit = (e) => {
+    e.preventDefault();
+    if (!uploadFileName) return;
+
+    const { orderId, milestoneId, docId } = uploadModalState;
+    // Create clickable preview/download URL from uploaded File or fallback
+    const generatedUrl = selectedFile ? URL.createObjectURL(selectedFile) : 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
+
+    setOrders(prevOrders => {
+      return prevOrders.map(ord => {
+        if (ord.orderId !== orderId) return ord;
+
+        const updatedMilestones = ord.milestones.map(ms => {
+          if (ms.id !== milestoneId) return ms;
+
+          const updatedDocs = ms.requiredDocs.map(doc => {
+            if (doc.id !== docId) return doc;
+            return {
+              ...doc,
+              fileName: uploadFileName,
+              url: generatedUrl,
+              status: 'PENDING_REVIEW',
+              hash: '0x' + Math.random().toString(16).substr(2, 8) + '...upload'
+            };
+          });
+
+          return {
+            ...ms,
+            status: ms.status === 'LOCKED' ? 'IN_PROGRESS' : ms.status,
+            requiredDocs: updatedDocs
+          };
+        });
+
+        return {
+          ...ord,
+          milestones: updatedMilestones
+        };
+      });
+    });
+
+    setUploadModalState({ isOpen: false, orderId: null, milestoneId: null, docId: null, docName: '' });
+    setUploadFileName('');
+    setSelectedFile(null);
+    triggerToast(`📄 File "${uploadFileName}" uploaded successfully! Sent for review.`);
   };
 
   return (
-    <div style={styles.dashboardWrapper}>
+    <div style={styles.appContainer}>
       <style>{`
-        html, body, #root {
-          height: 100%;
-          margin: 0;
-          padding: 0;
-          overflow: hidden;
+        @keyframes greenPulse {
+          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+          70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
-        .order-nav-card { transition: all 0.2s ease; cursor: pointer; border: 1px solid #e2e8f0; }
-        .order-nav-card:hover { border-color: #0f766e; background-color: #f0fdf4; }
-        .order-nav-card.active { border-color: #0f766e; background-color: #ffffff; box-shadow: 0 4px 12px rgba(15, 118, 110, 0.15); }
-        .vendor-row { transition: all 0.2s ease; }
-        .vendor-row:hover { background-color: #f1f5f9; }
-        
-        .doc-clickable-card { transition: all 0.2s ease; cursor: pointer; border: 1px solid #e2e8f0; }
-        .doc-clickable-card:hover { border-color: #0f766e; background-color: #f0fdf4; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(15, 118, 110, 0.1); }
-        
-        .btn-override { transition: all 0.2s ease; cursor: pointer; }
-        .btn-override:hover { filter: brightness(1.1); transform: translateY(-1px); }
-        .pulse-marker { animation: pulse 1.8s infinite; }
-        @keyframes pulse {
-          0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-          70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
-          100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-        
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .animated-card { transition: all 0.2s ease-in-out; }
+        .animated-card:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); }
+        .interactive-btn { transition: all 0.2s ease; cursor: pointer; }
+        .interactive-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .interactive-btn:active { transform: translateY(1px); }
       `}</style>
 
-      {/* TOAST NOTIFICATION */}
-      {toast && (
-        <div style={styles.toast}>
-          <span>🛡️</span>
-          <span>{toast}</span>
+      {/* TOAST NOTIFICATION BANNER */}
+      {toastMessage && (
+        <div style={styles.toastBanner}>
+          <span style={styles.toastDot}></span>
+          <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* TOP COMMAND BAR */}
-      <div style={styles.topBar}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={styles.logoBadge}>LOGISTICS HUB</div>
+      {/* TOP BRAND HEADER */}
+      <header style={styles.topHeader}>
+        <div style={styles.brandGroup}>
+          <div style={styles.brandIcon}>🚛</div>
           <div>
-            <h1 style={styles.mainTitle}>Perishable Cargo Telemetry & Stage Clearance Portal</h1>
-            <p style={styles.mainSubtitle}>Real-Time GPS Telemetry + Timestamped Vendor Custody + Document Override Controls</p>
+            <div style={styles.brandTitle}>PERISHABLE CARGO LOGISTICS &amp; COMPLIANCE CONTROL</div>
+            <div style={styles.brandSub}>Cross-Border Document Gatekeeper &amp; Cold-Chain Telemetry</div>
           </div>
         </div>
 
-        <label style={styles.toggleContainer}>
-          <span style={{ fontSize: '11px', fontWeight: '800', color: isLogisticsAdminMode ? '#0f766e' : '#64748b' }}>
-            {isLogisticsAdminMode ? 'LOGISTICS MANAGER OVERRIDE: ACTIVE' : 'VIEW-ONLY MODE'}
-          </span>
-          <input 
-            type="checkbox" 
-            checked={isLogisticsAdminMode} 
-            onChange={(e) => setIsLogisticsAdminMode(e.target.checked)}
-            style={{ width: '16px', height: '16px', cursor: 'pointer', accentColor: '#0f766e' }}
-          />
-        </label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={styles.liveBadge}>
+            <span style={styles.liveDot}></span>
+            <span>APEDA &amp; ICEGATE LEDGER: <strong>SYNCED</strong></span>
+          </div>
+
+          <div style={styles.userChip}>
+            <span>👮</span>
+            <div>
+              <div style={{ fontSize: '11px', fontWeight: '800' }}>{user?.email || 'Logistics Admin Desk'}</div>
+              <div style={{ fontSize: '9px', color: '#38bdf8' }}>{user?.role || 'CUSTOMS CLEARANCE OFFICER'}</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* FILTER & CONTROL BAR */}
+      <div style={styles.filterBar}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <div style={styles.searchBox}>
+            <span style={{ fontSize: '13px' }}>🔍</span>
+            <input
+              type="text"
+              placeholder="Search Order ID, Cargo, Port..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={styles.searchInput}
+            />
+          </div>
+
+          {/* SERVICE TYPE FILTER */}
+          <select
+            value={selectedServiceFilter}
+            onChange={(e) => setSelectedServiceFilter(e.target.value)}
+            style={styles.filterSelect}
+          >
+            <option value="ALL">All Service Types</option>
+            <option value="Ocean Freight">Ocean Freight 🚢</option>
+            <option value="Air Freight">Air Freight ✈️</option>
+            <option value="Trucking">Trucking 🚚</option>
+            <option value="Booking Management">Booking Management 📋</option>
+          </select>
+
+          {/* DESTINATION COUNTRY FILTER */}
+          <select
+            value={selectedCountryFilter}
+            onChange={(e) => setSelectedCountryFilter(e.target.value)}
+            style={styles.filterSelect}
+          >
+            <option value="ALL">All Destination Countries 🌍</option>
+            <option value="United Arab Emirates">United Arab Emirates (UAE)</option>
+            <option value="Netherlands">Netherlands (EU)</option>
+            <option value="United Kingdom">United Kingdom (UK)</option>
+            <option value="Singapore">Singapore</option>
+            <option value="Japan">Japan</option>
+          </select>
+        </div>
+
+        <div style={{ fontSize: '11px', fontWeight: '800', color: '#64748b' }}>
+          Showing <strong>{filteredOrders.length}</strong> of {orders.length} Active Consignments
+        </div>
       </div>
 
-      {/* THREE-COLUMN DASHBOARD GRID */}
-      <div style={styles.gridContainer}>
+      {/* MAIN TWO-COLUMN WORKSPACE */}
+      <div style={styles.workspaceGrid}>
         
-        {/* LEFT COLUMN 1: SEARCH & MULTI-FILTER PANEL */}
-        <div style={styles.leftCol}>
+        {/* LEFT COLUMN: ORDER SELECTION & TELEMETRY */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           
-          {/* SEARCH & FILTERS BOX */}
-          <div style={styles.filterCard}>
-            <div style={styles.searchBox}>
-              <span style={{ fontSize: '14px' }}>🔍</span>
-              <input 
-                type="text" 
-                placeholder="Search Order ID, Cargo, City..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={styles.searchInput}
-              />
-              {searchQuery && (
-                <button 
-                  onClick={() => setSearchQuery('')}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '12px', color: '#64748b' }}
-                >
-                  ✕
-                </button>
-              )}
+          {/* CARGO CONSIGNMENT LIST */}
+          <div style={styles.cardBox}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <h3 style={{ fontSize: '13px', fontWeight: '900', margin: 0, color: '#0f172a' }}>
+                📦 Active Cold-Chain Orders
+              </h3>
+              <span style={{ fontSize: '10px', fontWeight: '800', color: '#0284c7', backgroundColor: '#e0f2fe', padding: '2px 8px', borderRadius: '10px' }}>
+                LIVE DISPATCH
+              </span>
             </div>
 
-            {/* SERVICE TYPE FILTER */}
-            <div style={styles.filterGroup}>
-              <label style={styles.filterLabel}>SERVICE TYPE</label>
-              <select 
-                value={selectedService} 
-                onChange={(e) => setSelectedService(e.target.value)}
-                style={styles.filterSelect}
-              >
-                <option value="ALL">All Services</option>
-                <option value="Ocean Freight">Ocean Freight</option>
-                <option value="Air Freight">Air Freight</option>
-                <option value="Trucking">Trucking</option>
-                <option value="Booking Management">Booking Management</option>
-                <option value="Buyer's Consolidation">Buyer's Consolidation</option>
-              </select>
-            </div>
-
-            {/* DESTINATION COUNTRY FILTER */}
-            <div style={styles.filterGroup}>
-              <label style={styles.filterLabel}>DESTINATION COUNTRY</label>
-              <select 
-                value={selectedCountry} 
-                onChange={(e) => setSelectedCountry(e.target.value)}
-                style={styles.filterSelect}
-              >
-                {availableCountries.map((c) => (
-                  <option key={c} value={c}>
-                    {c === 'ALL' ? 'All Countries' : c}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {(searchQuery || selectedService !== 'ALL' || selectedCountry !== 'ALL') && (
-              <button onClick={resetAllFilters} style={styles.resetBtn}>
-                🔄 Reset All Filters
-              </button>
-            )}
-          </div>
-
-          <div style={styles.searchSummaryBar}>
-            <span>Showing <strong>{filteredOrders.length}</strong> of {orders.length} Consignments</span>
-          </div>
-
-          <div style={styles.orderList}>
-            {filteredOrders.length > 0 ? (
-              filteredOrders.map(ord => {
-                const isActive = ord.orderId === currentOrder.orderId;
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '280px', overflowY: 'auto' }}>
+              {filteredOrders.map(ord => {
+                const isSelected = ord.orderId === activeOrder.orderId;
 
                 return (
-                  <div 
+                  <div
                     key={ord.orderId}
-                    className={`order-nav-card ${isActive ? 'active' : ''}`}
-                    onClick={() => { setActiveOrderId(ord.orderId); setActiveStepId('step-1'); }}
-                    style={styles.orderCard}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <strong style={{ fontSize: '13px', color: '#0f172a' }}>{ord.orderId}</strong>
-                      <span style={styles.statusPill}>LIVE EN ROUTE</span>
-                    </div>
-                    
-                    <div style={{ fontSize: '12px', fontWeight: '700', color: '#0f766e', marginTop: '4px' }}>
-                      {ord.cargo}
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '6px' }}>
-                      <span style={styles.serviceTag}>🚢 {ord.serviceType}</span>
-                      <span style={styles.countryTag}>🌐 {ord.destinationCountry}</span>
-                    </div>
-
-                    <div style={{ fontSize: '11px', color: '#64748b', marginTop: '6px' }}>
-                      📍 {ord.currentLocation}
-                    </div>
-
-                    <div style={styles.miniProgressBg}>
-                      <div style={{ ...styles.miniProgressFill, width: `${ord.trackingProgressPct}%` }} />
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div style={styles.noResultsBox}>
-                <span>🚫 No matching consignments found</span>
-                <span style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>Try resetting filters or expanding your search scope</span>
-                <button onClick={resetAllFilters} style={{ ...styles.resetBtn, marginTop: '8px' }}>Reset Filters</button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* MIDDLE COLUMN 2: VENDOR CUSTODY TIMELINE & TIMESTAMPS */}
-        <div style={styles.midCol}>
-          <div style={styles.vendorCard}>
-            <div style={styles.vendorCardHeader}>
-              <span style={{ fontSize: '16px' }}>🏬</span>
-              <strong style={{ fontSize: '13px', color: '#0f172a' }}>VENDOR CUSTODY TIMELINE</strong>
-            </div>
-
-            <div style={styles.vendorChainList}>
-              {currentOrder.vendorChain.map((v, idx) => (
-                <div key={idx} className="vendor-row" style={styles.vendorBox}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '10px', fontWeight: '900', color: '#0f766e' }}>{v.stage}</span>
-                    <span style={{
-                      fontSize: '9px', fontWeight: '800', padding: '2px 6px', borderRadius: '4px',
-                      backgroundColor: v.status === 'HANDOFF_COMPLETE' ? '#dcfce7' : v.status === 'IN_CUSTODY' ? '#fef3c7' : '#f1f5f9',
-                      color: v.status === 'HANDOFF_COMPLETE' ? '#166534' : v.status === 'IN_CUSTODY' ? '#92400e' : '#64748b'
-                    }}>
-                      {v.status}
-                    </span>
-                  </div>
-
-                  <div style={{ fontSize: '12px', fontWeight: '800', color: '#1e293b', marginTop: '4px' }}>
-                    {v.vendorName}
-                  </div>
-
-                  <div style={{ fontSize: '11px', color: '#475569', marginTop: '2px' }}>
-                    👤 Handler: <strong>{v.handler}</strong> ({v.contact})
-                  </div>
-
-                  <div style={{ fontSize: '10px', color: '#64748b', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span>🕒 Timestamp:</span>
-                    <strong>{v.timestamp}</strong>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN 3: REAL-TIME TRACKING MAP & GATED STAGE DOCUMENTS */}
-        <div style={styles.rightCol}>
-          
-          {/* REAL-TIME GPS TRACKING PANEL */}
-          <div style={styles.trackingCard}>
-            <div style={styles.cardHeader}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '18px' }}>🛰️</span>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '14px', color: '#0f172a', fontWeight: '900' }}>
-                    REAL-TIME CONSIGNMENT TRACKING — {currentOrder.orderId}
-                  </h3>
-                  <span style={{ fontSize: '11px', color: '#64748b' }}>Assigned Driver: <strong>{currentOrder.driver}</strong></span>
-                </div>
-              </div>
-              
-              <div style={{ display: 'flex', gap: '6px' }}>
-                <div style={styles.serviceModeBadge}>
-                  📦 {currentOrder.serviceType}
-                </div>
-                <div style={styles.telemetryBadge}>
-                  ❄️ Cold-Chain: <strong>{currentOrder.tempTelemetry}</strong>
-                </div>
-              </div>
-            </div>
-
-            <div style={styles.routeContainer}>
-              <div style={styles.routeHeader}>
-                <div><strong>Origin:</strong> {currentOrder.originLocation}</div>
-                <div><strong>ETA:</strong> <span style={{ color: '#0f766e', fontWeight: '800' }}>{currentOrder.eta}</span></div>
-                <div><strong>Port / Country:</strong> {currentOrder.destination}</div>
-              </div>
-
-              <div style={styles.routeTrackBg}>
-                <div style={{ ...styles.routeTrackFill, width: `${currentOrder.trackingProgressPct}%` }} />
-                <div 
-                  className="pulse-marker"
-                  style={{ ...styles.routeMarker, left: `${currentOrder.trackingProgressPct}%` }}
-                >
-                  🚚
-                </div>
-              </div>
-
-              <div style={styles.currentLocBanner}>
-                <span>📍 CURRENT GPS POSITION:</span>
-                <strong style={{ color: '#0f766e' }}>{currentOrder.currentLocation}</strong>
-                <span style={{ fontSize: '11px', color: '#64748b' }}>({currentOrder.trackingProgressPct}% Route Completed)</span>
-              </div>
-            </div>
-          </div>
-
-          {/* GATED STAGE DOCUMENT COMPLIANCE CONTROL */}
-          <div style={styles.stageCard}>
-            
-            <div style={styles.stageCardHeader}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={styles.stageNumBadge}>{currentStep.stageNumber}</span>
-                  <h2 style={styles.stageTitle}>{currentStep.stageName}</h2>
-                </div>
-                <span style={styles.locationText}>📍 Facility Location: {currentStep.location}</span>
-              </div>
-
-              {/* LOGISTICS DESK STAGE LOCK / UNLOCK BUTTON */}
-              {isLogisticsAdminMode && (
-                <button 
-                  onClick={() => toggleStageLock(currentStep.id)}
-                  style={{
-                    ...styles.lockToggleBtn,
-                    backgroundColor: currentStep.status === 'LOCKED' ? '#0f766e' : '#ef4444',
-                    color: '#fff'
-                  }}
-                >
-                  {currentStep.status === 'LOCKED' ? '🔓 Unlock Stage Gate' : '🔒 Lock Portal Stage'}
-                </button>
-              )}
-            </div>
-
-            {/* STAGE SELECTOR TABS (5 FULL STAGES) */}
-            <div style={styles.stepperBar}>
-              {currentOrder.milestones.map((step) => {
-                const isActive = step.id === activeStepId;
-                const isCompleted = step.status === 'COMPLETED';
-                const isInProgress = step.status === 'IN_PROGRESS';
-                const isLocked = step.status === 'LOCKED';
-
-                return (
-                  <div 
-                    key={step.id} 
-                    onClick={() => setActiveStepId(step.id)}
                     style={{
-                      ...styles.stepTab,
-                      backgroundColor: isActive ? '#0f766e' : isCompleted ? '#ecfdf5' : isInProgress ? '#fef3c7' : '#f8fafc',
-                      color: isActive ? '#ffffff' : isCompleted ? '#166534' : isInProgress ? '#92400e' : '#64748b',
-                      borderColor: isActive ? '#0f766e' : isCompleted ? '#a7f3d0' : '#e2e8f0'
+                      ...styles.orderCardItem,
+                      borderColor: isSelected ? '#0284c7' : '#e2e8f0',
+                      backgroundColor: isSelected ? '#f0f9ff' : '#ffffff'
+                    }}
+                    className="interactive-btn animated-card"
+                    onClick={() => {
+                      setSelectedOrderId(ord.orderId);
+                      setSelectedStageId(ord.milestones[0].id);
+                      triggerToast(`Selected Order: ${ord.orderId} (${ord.cargo})`);
                     }}
                   >
-                    <span>{step.stageNumber}. {step.stageName}</span>
-                    {isLocked && <span>🔒</span>}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div>
+                        <div style={{ fontSize: '12px', fontWeight: '900', color: '#0f172a' }}>{ord.orderId}</div>
+                        <div style={{ fontSize: '11px', fontWeight: '700', color: '#0284c7', marginTop: '2px' }}>{ord.cargo}</div>
+                      </div>
+                      <span style={{ fontSize: '10px', fontWeight: '800', backgroundColor: '#f1f5f9', padding: '2px 6px', borderRadius: '4px', color: '#475569' }}>
+                        {ord.serviceType}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px', fontSize: '10px', color: '#64748b' }}>
+                      <span>📍 {ord.destinationCountry}</span>
+                      <span style={{ fontWeight: '800', color: ord.trackingProgressPct === 100 ? '#10b981' : '#0f172a' }}>
+                        Progress: {ord.trackingProgressPct}%
+                      </span>
+                    </div>
+
+                    <div style={{ width: '100%', height: '4px', backgroundColor: '#e2e8f0', borderRadius: '2px', marginTop: '6px', overflow: 'hidden' }}>
+                      <div style={{ width: `${ord.trackingProgressPct}%`, height: '100%', backgroundColor: ord.trackingProgressPct === 100 ? '#10b981' : '#0284c7' }}></div>
+                    </div>
                   </div>
                 );
               })}
             </div>
+          </div>
 
-            {/* MANDATORY DOCUMENTS */}
-            <div style={styles.docSection}>
-              <div style={styles.docSectionHeader}>
-                <span>STAGE COMPLIANCE DOCUMENTS (CLICK ANY DOC TO VIEW / INSPECT)</span>
-                <span>MANAGER AUDIT & RE-REVIEW DESK</span>
+          {/* ACTIVE CONSIGNMENT TELEMETRY CARD */}
+          <div style={{ ...styles.cardBox, borderLeft: '5px solid #0284c7' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <span style={{ fontSize: '10px', fontWeight: '900', color: '#0284c7', letterSpacing: '0.5px' }}>
+                  CONSIGNMENT TELEMETRY &amp; HANDOFF
+                </span>
+                <h2 style={{ fontSize: '16px', fontWeight: '900', margin: '2px 0 0 0', color: '#0f172a' }}>
+                  {activeOrder.cargo}
+                </h2>
+                <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
+                  Order ID: <strong>{activeOrder.orderId}</strong> | Driver: <strong>{activeOrder.driver}</strong>
+                </div>
               </div>
 
-              <div style={styles.docListScrollable}>
-                {currentStep.requiredDocs.map((doc) => {
-                  const isVerified = doc.status === 'VERIFIED';
-                  const isPending = doc.status === 'PENDING_REVIEW';
-                  const isRejected = doc.status === 'REJECTED';
-                  const isMissing = doc.status === 'MISSING';
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '10px', fontWeight: '800', color: '#64748b' }}>TEMPERATURE SENSOR</div>
+                <div style={{ fontSize: '13px', fontWeight: '900', color: '#0369a1', backgroundColor: '#e0f2fe', padding: '4px 8px', borderRadius: '6px', marginTop: '2px' }}>
+                  🌡️ {activeOrder.tempTelemetry}
+                </div>
+              </div>
+            </div>
 
-                  return (
-                    <div 
-                      key={doc.id} 
-                      className="doc-clickable-card"
-                      onClick={() => setPreviewDocModal(doc)}
-                      style={styles.docRow}
-                    >
-                      <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <div style={styles.docIconBadge}>📄</div>
-                        <div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <strong style={{ fontSize: '13px', color: '#1e293b' }}>{doc.name}</strong>
-                            {doc.fileName && <span style={styles.fileNamePill}>👁️ View {doc.fileName}</span>}
-                          </div>
-                          <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>
-                            Issuer: <strong>{doc.issuer}</strong> {doc.verifiedAt && `| Verified: ${doc.verifiedAt}`}
-                          </div>
-                          {doc.reviewNote && (
-                            <div style={{ fontSize: '10px', color: '#0f766e', fontStyle: 'italic', marginTop: '2px' }}>
-                              💬 Audit Log: "{doc.reviewNote}"
-                            </div>
-                          )}
-                        </div>
-                      </div>
+            {/* ROUTE INFO */}
+            <div style={styles.routeBox}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '11px' }}>
+                <div>
+                  <span style={{ color: '#64748b', fontSize: '9px', fontWeight: '800' }}>CURRENT GPS LOCATION</span>
+                  <div style={{ fontWeight: '800', color: '#0f172a' }}>📍 {activeOrder.currentLocation}</div>
+                </div>
+                <div>
+                  <span style={{ color: '#64748b', fontSize: '9px', fontWeight: '800' }}>FINAL DESTINATION</span>
+                  <div style={{ fontWeight: '800', color: '#0f172a' }}>⚓ {activeOrder.destination}</div>
+                </div>
+              </div>
+              <div style={{ fontSize: '10px', color: '#0369a1', marginTop: '6px', fontWeight: '700' }}>
+                ⏱️ Estimated Port Arrival: {activeOrder.eta}
+              </div>
+            </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        {isVerified && (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={styles.verifiedTag}>✓ VERIFIED</span>
-                            {isLogisticsAdminMode && (
-                              <button 
-                                className="btn-override"
-                                onClick={(e) => handleForceReReview(e, doc)}
-                                style={styles.reReviewBtn}
-                                title="Revert status back to Re-Review mode"
-                              >
-                                ⚠️ Force Re-Review
-                              </button>
-                            )}
-                          </div>
-                        )}
+            {/* CHAIN OF CUSTODY HANDOFF LOG */}
+            <div style={{ marginTop: '14px' }}>
+              <div style={{ fontSize: '10px', fontWeight: '900', color: '#64748b', marginBottom: '8px' }}>
+                🔗 CUSTODY HANDOFF LOG (5 MANDATORY VENDORS)
+              </div>
 
-                        {isPending && (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span style={styles.pendingTag}>⏳ PENDING REVIEW</span>
-                            {isLogisticsAdminMode && (
-                              <button 
-                                style={styles.reviewBtn}
-                                onClick={(e) => handleForceReReview(e, doc)}
-                              >
-                                🔍 Audit & Decide
-                              </button>
-                            )}
-                          </div>
-                        )}
-
-                        {isRejected && (
-                          <span style={styles.rejectedTag}>❌ REJECTED</span>
-                        )}
-
-                        {isMissing && (
-                          <span style={styles.missingTag}>⚠️ UPLOAD PENDING</span>
-                        )}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {activeOrder.vendorChain.map((v, idx) => (
+                  <div key={idx} style={styles.vendorRow}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '10px', fontWeight: '900', color: '#0284c7' }}>{v.stage.split(' - ')[0]}</span>
+                      <div>
+                        <div style={{ fontSize: '11px', fontWeight: '800', color: '#0f172a' }}>{v.vendorName}</div>
+                        <div style={{ fontSize: '9.5px', color: '#64748b' }}>Handler: {v.handler} ({v.contact})</div>
                       </div>
                     </div>
-                  );
-                })}
+
+                    <span style={{
+                      fontSize: '9px',
+                      fontWeight: '900',
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      backgroundColor: v.status === 'HANDOFF_COMPLETE' ? '#dcfce7' : v.status === 'IN_CUSTODY' ? '#e0f2fe' : '#f1f5f9',
+                      color: v.status === 'HANDOFF_COMPLETE' ? '#15803d' : v.status === 'IN_CUSTODY' ? '#0369a1' : '#64748b'
+                    }}>
+                      {v.status}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
 
           </div>
+
+        </div>
+
+        {/* RIGHT COLUMN: 5-STEP MILESTONE PIPELINE & DOCUMENT REVIEW */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          
+          {/* STEPPER NAVIGATOR */}
+          <div style={styles.cardBox}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <h3 style={{ fontSize: '13px', fontWeight: '900', margin: 0, color: '#0f172a' }}>
+                🚀 Cross-Border Compliance Milestone Pipeline
+              </h3>
+              <span style={{ fontSize: '10px', color: '#64748b', fontWeight: '700' }}>Select stage to review documents</span>
+            </div>
+
+            <div style={styles.stepperContainer}>
+              {activeOrder.milestones.map((m) => {
+                const isSelected = m.id === selectedStageId;
+                const isCompleted = m.status === 'COMPLETED';
+                const isInProgress = m.status === 'IN_PROGRESS';
+                const isLocked = m.status === 'LOCKED' || m.isManualLocked;
+
+                return (
+                  <div
+                    key={m.id}
+                    style={{
+                      ...styles.stepperTab,
+                      borderColor: isSelected ? '#0284c7' : '#e2e8f0',
+                      backgroundColor: isSelected ? '#0284c7' : isCompleted ? '#f0fdf4' : isInProgress ? '#f0f9ff' : '#f8fafc',
+                      color: isSelected ? '#ffffff' : '#0f172a'
+                    }}
+                    className="interactive-btn"
+                    onClick={() => {
+                      setSelectedStageId(m.id);
+                      triggerToast(`Switched to Milestone ${m.stageNumber}: ${m.stageName}`);
+                    }}
+                  >
+                    <div style={{ fontSize: '11px', fontWeight: '900' }}>
+                      {isCompleted ? '✓' : isLocked ? '🔒' : '●'} Stage {m.stageNumber}
+                    </div>
+                    <div style={{ fontSize: '10px', fontWeight: '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '90px' }}>
+                      {m.stageName.split(' ')[0]}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ACTIVE MILESTONE DETAIL & DOCUMENT AUDIT PANEL */}
+          {activeMilestone && (
+            <div style={styles.cardBox}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #f1f5f9', pb: '10px', marginBottom: '14px' }}>
+                <div>
+                  <div style={{ fontSize: '10px', fontWeight: '900', color: '#0284c7' }}>
+                    STAGE {activeMilestone.stageNumber} OF 05 COMPLIANCE GATEWAY
+                  </div>
+                  <h2 style={{ fontSize: '16px', fontWeight: '900', margin: '2px 0 0 0', color: '#0f172a' }}>
+                    {activeMilestone.stageName}
+                  </h2>
+                  <div style={{ fontSize: '11px', color: '#64748b' }}>📍 Node Location: {activeMilestone.location}</div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <button
+                    style={{
+                      ...styles.lockToggleBtn,
+                      backgroundColor: activeMilestone.isManualLocked ? '#ef4444' : '#ffffff',
+                      color: activeMilestone.isManualLocked ? '#ffffff' : '#334155'
+                    }}
+                    className="interactive-btn"
+                    onClick={() => handleToggleStageLock(activeOrder.orderId, activeMilestone.id)}
+                  >
+                    {activeMilestone.isManualLocked ? '🔒 STAGE LOCKED MANUALLY' : '🔓 LOCK STAGE'}
+                  </button>
+
+                  <span style={{
+                    fontSize: '11px',
+                    fontWeight: '900',
+                    padding: '4px 10px',
+                    borderRadius: '20px',
+                    backgroundColor: activeMilestone.status === 'COMPLETED' ? '#dcfce7' : activeMilestone.status === 'IN_PROGRESS' ? '#e0f2fe' : '#fee2e2',
+                    color: activeMilestone.status === 'COMPLETED' ? '#15803d' : activeMilestone.status === 'IN_PROGRESS' ? '#0369a1' : '#b91c1c'
+                  }}>
+                    {activeMilestone.status}
+                  </span>
+                </div>
+              </div>
+
+              {/* REQUIRED DOCUMENTS GATEKEEPER LIST */}
+              <div>
+                <div style={{ fontSize: '11px', fontWeight: '900', color: '#0f172a', marginBottom: '10px' }}>
+                  📋 Mandatory Documents Required to Clear Stage {activeMilestone.stageNumber}:
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {activeMilestone.requiredDocs.map(doc => {
+                    const isVerified = doc.status === 'VERIFIED';
+                    const isPending = doc.status === 'PENDING_REVIEW';
+                    const isMissing = doc.status === 'MISSING';
+
+                    return (
+                      <div key={doc.id} style={{
+                        ...styles.docAuditCard,
+                        borderColor: isVerified ? '#bbf7d0' : isPending ? '#bae6fd' : '#fecaca',
+                        backgroundColor: isVerified ? '#f0fdf4' : isPending ? '#f0f9ff' : '#fef2f2'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                            <span style={{ fontSize: '20px' }}>{isVerified ? '📜' : isPending ? '⏳' : '⚠️'}</span>
+                            <div>
+                              {/* CLICKABLE DOCUMENT TITLE LINK */}
+                              {doc.url ? (
+                                <a 
+                                  href={doc.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer" 
+                                  style={styles.clickableDocTitle}
+                                  title="Click to preview file"
+                                >
+                                  📄 {doc.name} ↗
+                                </a>
+                              ) : (
+                                <div style={{ fontSize: '12px', fontWeight: '900', color: '#0f172a' }}>{doc.name}</div>
+                              )}
+                              <div style={{ fontSize: '10px', color: '#64748b' }}>Authority Issuer: <strong>{doc.issuer}</strong></div>
+                              {doc.fileName && (
+                                <div style={{ fontSize: '10px', color: '#0284c7', fontWeight: '800', marginTop: '2px' }}>
+                                  📎 File: {doc.fileName} | Hash: <code style={{ fontSize: '9px' }}>{doc.hash}</code>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          <span style={{
+                            fontSize: '9.5px',
+                            fontWeight: '900',
+                            padding: '3px 8px',
+                            borderRadius: '4px',
+                            backgroundColor: isVerified ? '#dcfce7' : isPending ? '#e0f2fe' : '#fee2e2',
+                            color: isVerified ? '#15803d' : isPending ? '#0369a1' : '#b91c1c'
+                          }}>
+                            {doc.status}
+                          </span>
+                        </div>
+
+                        {/* REVIEW NOTE & ACTION BUTTONS */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', paddingTop: '8px', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
+                          <div style={{ fontSize: '10px', color: '#475569', fontStyle: 'italic' }}>
+                            {doc.reviewNote ? `Note: "${doc.reviewNote}"` : 'Awaiting document upload/verification.'}
+                            {doc.verifiedAt && <span style={{ color: '#16a34a', fontWeight: '800' }}> · Verified at {doc.verifiedAt}</span>}
+                          </div>
+
+                          <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                            {/* CLICKABLE VIEW & DOWNLOAD BUTTONS */}
+                            {doc.url && (
+                              <>
+                                <a
+                                  href={doc.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={styles.viewSmallBtn}
+                                  className="interactive-btn"
+                                >
+                                  👁️ View
+                                </a>
+                                <a
+                                  href={doc.url}
+                                  download={doc.fileName || `${doc.name}.pdf`}
+                                  style={styles.downloadSmallBtn}
+                                  className="interactive-btn"
+                                >
+                                  ⬇️ Download
+                                </a>
+                              </>
+                            )}
+
+                            {isMissing && (
+                              <button
+                                style={styles.uploadSmallBtn}
+                                className="interactive-btn"
+                                onClick={() => setUploadModalState({
+                                  isOpen: true,
+                                  orderId: activeOrder.orderId,
+                                  milestoneId: activeMilestone.id,
+                                  docId: doc.id,
+                                  docName: doc.name
+                                })}
+                              >
+                                Upload Document 📤
+                              </button>
+                            )}
+
+                            {isPending && (
+                              <button
+                                style={styles.approveSmallBtn}
+                                className="interactive-btn"
+                                onClick={() => handleApproveDocument(activeOrder.orderId, activeMilestone.id, doc.id)}
+                              >
+                                Approve & Sign Ledger ✓
+                              </button>
+                            )}
+
+                            {isVerified && (
+                              <span style={{ fontSize: '10px', color: '#16a34a', fontWeight: '900', marginLeft: '4px' }}>
+                                LOCKED ON-CHAIN 🔒
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+            </div>
+          )}
 
         </div>
 
       </div>
 
-      {/* DOCUMENT PREVIEW & INSPECTOR MODAL */}
-      {previewDocModal && (
-        <div style={styles.modalOverlay} onClick={() => setPreviewDocModal(null)}>
-          <div style={{ ...styles.modalContent, maxWidth: '650px' }} onClick={e => e.stopPropagation()}>
+      {/* UPLOAD DOCUMENT POPUP MODAL */}
+      {uploadModalState.isOpen && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modalCard}>
             <div style={styles.modalHeader}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '20px' }}>📄</span>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '15px' }}>{previewDocModal.name}</h3>
-                  <span style={{ fontSize: '11px', color: '#64748b' }}>Issuing Authority: {previewDocModal.issuer}</span>
-                </div>
-              </div>
-              <button style={styles.closeBtn} onClick={() => setPreviewDocModal(null)}>✕</button>
+              <span style={{ fontWeight: '900', fontSize: '12px' }}>📤 Upload Compliance Document</span>
+              <button style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }} onClick={() => setUploadModalState({ isOpen: false, orderId: null, milestoneId: null, docId: null, docName: '' })}>✕</button>
             </div>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', backgroundColor: '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                <div>
-                  <span style={{ fontSize: '10px', color: '#64748b', display: 'block' }}>FILE NAME</span>
-                  <strong style={{ fontSize: '12px', color: '#0f766e' }}>{previewDocModal.fileName || 'N/A (Pending Upload)'}</strong>
-                </div>
-                <div>
-                  <span style={{ fontSize: '10px', color: '#64748b', display: 'block' }}>VERIFICATION STATUS</span>
-                  <strong style={{ fontSize: '12px', color: previewDocModal.status === 'VERIFIED' ? '#166534' : '#b45309' }}>
-                    {previewDocModal.status}
-                  </strong>
-                </div>
-                <div style={{ gridColumn: 'span 2' }}>
-                  <span style={{ fontSize: '10px', color: '#64748b', display: 'block' }}>CRYPTOGRAPHIC SHA-256 HASH</span>
-                  <code style={styles.codeBlock}>{previewDocModal.hash || 'Hash Not Generated Yet'}</code>
-                </div>
+
+            <form onSubmit={handleUploadSubmit} style={{ padding: '18px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ fontSize: '11px', color: '#334155' }}>
+                Uploading required document for <strong>{uploadModalState.docName}</strong> ({uploadModalState.orderId})
               </div>
-
-              <div style={styles.docViewerPaper}>
-                <div style={{ textAlign: 'center', borderBottom: '1px border #cbd5e1', paddingBottom: '12px', marginBottom: '12px' }}>
-                  <h4 style={{ margin: 0, color: '#0f172a', fontSize: '14px' }}>PERISHABLE GOODS SANITARY CERTIFICATE</h4>
-                  <span style={{ fontSize: '10px', color: '#64748b' }}>Official Digital Copy • Verified via Cold-Chain Logistics Portal</span>
-                </div>
-                
-                <p style={{ fontSize: '11px', color: '#334155', lineHeight: '1.6' }}>
-                  This certifies that consignment <strong>{currentOrder.orderId}</strong> containing <strong>{currentOrder.cargo}</strong> bound for <strong>{currentOrder.destinationCountry}</strong> via <strong>{currentOrder.serviceType}</strong> has undergone mandatory temperature-controlled compliance inspection under stage <strong>{currentStep.stageName}</strong>.
-                </p>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px', paddingTop: '10px', borderTop: '1px dashed #cbd5e1', fontSize: '10px', color: '#64748b' }}>
-                  <div>Verified At: {previewDocModal.verifiedAt || 'Pending Signoff'}</div>
-                  <div>Digitally Signed by: {previewDocModal.issuer}</div>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                {previewDocModal.fileName && (
-                  <button 
-                    onClick={() => triggerToast(`📥 Downloading official copy: ${previewDocModal.fileName}`)}
-                    style={styles.approveBtn}
-                  >
-                    ⬇️ Download Official PDF
-                  </button>
-                )}
-                <button 
-                  onClick={() => setPreviewDocModal(null)}
-                  style={{ ...styles.rejectBtn, backgroundColor: '#64748b' }}
-                >
-                  Close Viewer
-                </button>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* LOGISTICS MANAGER RE-REVIEW & DECISION MODAL */}
-      {reviewModalDoc && (
-        <div style={styles.modalOverlay} onClick={() => setReviewModalDoc(null)}>
-          <div style={styles.modalContent} onClick={e => e.stopPropagation()}>
-            <div style={styles.modalHeader}>
-              <h3>🛠️ Logistics Authority Review & Override Desk</h3>
-              <button style={styles.closeBtn} onClick={() => setReviewModalDoc(null)}>✕</button>
-            </div>
-            
-            <div style={{ fontSize: '12px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div><strong>Document Name:</strong> {reviewModalDoc.name}</div>
-              <div><strong>Current Status:</strong> <span style={{ fontWeight: '800', color: '#0f766e' }}>{reviewModalDoc.status}</span></div>
-              <div><strong>Issuing Authority:</strong> {reviewModalDoc.issuer}</div>
-              {reviewModalDoc.hash && <div><strong>Cryptographic Hash:</strong> <code style={styles.codeBlock}>{reviewModalDoc.hash}</code></div>}
 
               <div>
-                <label style={{ fontWeight: '800', display: 'block', marginBottom: '4px' }}>Logistics Manager Audit Remark:</label>
-                <textarea 
-                  rows={3} 
-                  placeholder="Enter explicit reason for approval, rejection, or why re-review was forced..."
-                  value={reviewNoteInput}
-                  onChange={(e) => setReviewNoteInput(e.target.value)}
-                  style={styles.reviewTextarea}
+                <label style={{ fontSize: '9px', fontWeight: '800', color: '#64748b' }}>FILE NAME / CERTIFICATE REFERENCE</label>
+                <input
+                  type="text"
+                  placeholder="e.g. MEAT_NET_HEALTH_CERT_2026.pdf"
+                  value={uploadFileName}
+                  onChange={(e) => setUploadFileName(e.target.value)}
+                  style={styles.modalInput}
+                  required
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
-                <button 
-                  onClick={() => handleReviewDecision(reviewModalDoc.id, 'VERIFIED')}
-                  style={styles.approveBtn}
-                >
-                  ✅ Approve & Verify
-                </button>
-                <button 
-                  onClick={() => handleReviewDecision(reviewModalDoc.id, 'PENDING_REVIEW')}
-                  style={styles.forceReReviewActionBtn}
-                >
-                  ⚠️ Revert to Re-Review Status
-                </button>
-                <button 
-                  onClick={() => handleReviewDecision(reviewModalDoc.id, 'REJECTED')}
-                  style={styles.rejectBtn}
-                >
-                  ❌ Reject Document
-                </button>
+              <div>
+                <label style={{ fontSize: '9px', fontWeight: '800', color: '#64748b' }}>SELECT ATTACHMENT (PDF / IMAGE)</label>
+                <input type="file" onChange={handleFileChange} style={styles.modalInput} />
               </div>
-            </div>
+
+              <button type="submit" style={styles.modalSubmitBtn} className="interactive-btn">
+                Submit for Verification 🚀
+              </button>
+            </form>
           </div>
         </div>
       )}
@@ -1040,118 +1057,50 @@ export default function LogisticsPortalDocumentGated() {
   );
 }
 
-// STYLES
+// STYLES OBJECT
 const styles = {
-  dashboardWrapper: { 
-    width: '100vw', 
-    height: '100vh', 
-    maxHeight: '100vh',
-    backgroundColor: '#f8fafc', 
-    padding: '16px', 
-    fontFamily: 'system-ui, -apple-system, sans-serif', 
-    boxSizing: 'border-box',
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden'
-  },
-  toast: { position: 'fixed', bottom: '24px', right: '24px', backgroundColor: '#0f172a', color: '#fff', padding: '12px 20px', borderRadius: '30px', fontSize: '12px', fontWeight: '700', zIndex: 1000, display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 10px 25px rgba(0,0,0,0.3)' },
+  appContainer: { width: '100%', minHeight: '100vh', backgroundColor: '#f8fafc', color: '#0f172a', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' },
+  toastBanner: { position: 'fixed', top: '16px', right: '20px', backgroundColor: '#0f172a', color: '#ffffff', padding: '10px 18px', borderRadius: '30px', fontSize: '12px', fontWeight: '800', zIndex: 10000, display: 'flex', alignItems: 'center', gap: '8px', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)' },
+  toastDot: { width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10b981', animation: 'greenPulse 1.5s infinite ease-in-out' },
 
-  topBar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#ffffff', border: '1px solid #cbd5e1', padding: '12px 20px', borderRadius: '12px', marginBottom: '14px', flexShrink: 0 },
-  logoBadge: { backgroundColor: '#0f766e', color: '#fff', fontSize: '11px', fontWeight: '900', padding: '6px 12px', borderRadius: '6px' },
-  mainTitle: { fontSize: '18px', fontWeight: '900', color: '#0f172a', margin: 0 },
-  mainSubtitle: { fontSize: '12px', color: '#64748b', margin: '2px 0 0 0' },
+  topHeader: { background: 'linear-gradient(135deg, #0f172a, #0369a1)', padding: '12px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#ffffff' },
+  brandGroup: { display: 'flex', alignItems: 'center', gap: '10px' },
+  brandIcon: { width: '32px', height: '32px', backgroundColor: '#0284c7', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' },
+  brandTitle: { fontSize: '12px', fontWeight: '900', letterSpacing: '0.5px' },
+  brandSub: { fontSize: '9.5px', color: '#7dd3fc' },
 
-  toggleContainer: { display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', backgroundColor: '#ecfdf5', padding: '8px 14px', borderRadius: '20px', border: '1px solid #a7f3d0' },
+  liveBadge: { display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: 'rgba(255,255,255,0.1)', padding: '4px 10px', borderRadius: '20px', fontSize: '10px' },
+  liveDot: { width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10b981' },
+  userChip: { backgroundColor: 'rgba(255,255,255,0.1)', padding: '4px 10px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px' },
 
-  gridContainer: { 
-    display: 'grid', 
-    gridTemplateColumns: '290px 310px 1fr', 
-    gap: '16px', 
-    flex: 1, 
-    minHeight: 0, 
-    height: '100%' 
-  },
-  
-  // LEFT COLUMN FILTERS
-  leftCol: { display: 'flex', flexDirection: 'column', gap: '8px', height: '100%', minHeight: 0 },
-  filterCard: { backgroundColor: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '10px', padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px', flexShrink: 0 },
-  searchBox: { display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: '#f8fafc', border: '1px solid #cbd5e1', padding: '8px 10px', borderRadius: '6px' },
-  searchInput: { border: 'none', outline: 'none', width: '100%', fontSize: '12px', backgroundColor: 'transparent' },
-  
-  filterGroup: { display: 'flex', flexDirection: 'column', gap: '3px' },
-  filterLabel: { fontSize: '9px', fontWeight: '900', color: '#475569', letterSpacing: '0.5px' },
-  filterSelect: { padding: '6px 8px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '11px', color: '#0f172a', backgroundColor: '#ffffff', cursor: 'pointer', outline: 'none' },
-  resetBtn: { padding: '5px', backgroundColor: '#f1f5f9', color: '#0f766e', border: '1px solid #cbd5e1', borderRadius: '4px', fontSize: '10px', fontWeight: '800', cursor: 'pointer', textAlign: 'center' },
+  filterBar: { backgroundColor: '#ffffff', borderBottom: '1px solid #e2e8f0', padding: '10px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' },
+  searchBox: { display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: '#f1f5f9', padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', width: '220px' },
+  searchInput: { border: 'none', background: 'transparent', outline: 'none', fontSize: '11px', width: '100%' },
+  filterSelect: { padding: '6px 10px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '11px', fontWeight: '700', backgroundColor: '#ffffff', color: '#334155' },
 
-  searchSummaryBar: { fontSize: '11px', color: '#64748b', padding: '0 4px', flexShrink: 0 },
-  orderList: { display: 'flex', flexDirection: 'column', gap: '10px', overflowY: 'auto', flex: 1, paddingRight: '4px' },
-  orderCard: { backgroundColor: '#fff', padding: '12px', borderRadius: '10px' },
-  statusPill: { fontSize: '9px', fontWeight: '900', backgroundColor: '#dcfce7', color: '#166534', padding: '2px 6px', borderRadius: '4px' },
-  serviceTag: { fontSize: '9px', fontWeight: '800', backgroundColor: '#f0fdf4', color: '#0f766e', border: '1px solid #bbf7d0', padding: '2px 5px', borderRadius: '4px' },
-  countryTag: { fontSize: '9px', fontWeight: '800', backgroundColor: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0', padding: '2px 5px', borderRadius: '4px' },
-  
-  miniProgressBg: { height: '4px', backgroundColor: '#e2e8f0', borderRadius: '2px', marginTop: '10px', overflow: 'hidden' },
-  miniProgressFill: { height: '100%', backgroundColor: '#0f766e' },
-  noResultsBox: { padding: '20px', textAlign: 'center', color: '#334155', backgroundColor: '#fff', borderRadius: '8px', border: '1px dashed #cbd5e1', display: 'flex', flexDirection: 'column', alignItems: 'center' },
+  workspaceGrid: { padding: '20px 24px', display: 'grid', gridTemplateColumns: '1fr 1.3fr', gap: '20px' },
+  cardBox: { backgroundColor: '#ffffff', borderRadius: '10px', border: '1px solid #e2e8f0', padding: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.03)' },
+  orderCardItem: { padding: '10px', borderRadius: '8px', border: '1px solid', cursor: 'pointer' },
 
-  // MIDDLE COLUMN
-  midCol: { display: 'flex', flexDirection: 'column', gap: '12px', height: '100%', minHeight: 0 },
-  vendorCard: { backgroundColor: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '12px', padding: '14px', display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0, boxSizing: 'border-box' },
-  vendorCardHeader: { display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px', borderBottom: '1px solid #f1f5f9', paddingBottom: '8px', flexShrink: 0 },
-  vendorChainList: { display: 'flex', flexDirection: 'column', gap: '10px', overflowY: 'auto', flex: 1, paddingRight: '4px' },
-  vendorBox: { backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '10px 12px' },
+  routeBox: { backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', padding: '10px', borderRadius: '8px', marginTop: '12px' },
+  vendorRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 8px', backgroundColor: '#f8fafc', borderRadius: '6px', border: '1px solid #f1f5f9' },
 
-  // RIGHT COLUMN
-  rightCol: { display: 'flex', flexDirection: 'column', gap: '14px', height: '100%', minHeight: 0 },
+  stepperContainer: { display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px' },
+  stepperTab: { padding: '8px 6px', borderRadius: '6px', border: '1px solid', textAlign: 'center', cursor: 'pointer' },
 
-  // TRACKING CARD
-  trackingCard: { backgroundColor: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '12px', padding: '14px', flexShrink: 0 },
-  cardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' },
-  serviceModeBadge: { backgroundColor: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: '800' },
-  telemetryBadge: { backgroundColor: '#f0fdf4', color: '#166534', border: '1px solid #a7f3d0', padding: '4px 10px', borderRadius: '20px', fontSize: '11px' },
-  routeContainer: { backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '12px' },
-  routeHeader: { display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#334155', marginBottom: '10px' },
-  routeTrackBg: { position: 'relative', height: '8px', backgroundColor: '#cbd5e1', borderRadius: '4px', margin: '14px 0' },
-  routeTrackFill: { height: '100%', backgroundColor: '#0f766e', borderRadius: '4px' },
-  routeMarker: { position: 'absolute', top: '-11px', transform: 'translateX(-50%)', width: '28px', height: '28px', backgroundColor: '#10b981', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '13px' },
-  currentLocBanner: { display: 'flex', gap: '8px', alignItems: 'center', fontSize: '11px', fontWeight: '800', color: '#1e293b', marginTop: '6px' },
+  lockToggleBtn: { border: '1px solid #cbd5e1', padding: '4px 8px', borderRadius: '6px', fontSize: '10px', fontWeight: '800' },
+  docAuditCard: { padding: '12px', borderRadius: '8px', border: '1px solid' },
 
-  // STAGE CARD
-  stageCard: { backgroundColor: '#ffffff', border: '1px solid #cbd5e1', borderRadius: '12px', padding: '14px', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', boxSizing: 'border-box' },
-  stageCardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexShrink: 0 },
-  stageNumBadge: { backgroundColor: '#0f766e', color: '#fff', fontSize: '11px', fontWeight: '900', padding: '2px 8px', borderRadius: '4px' },
-  stageTitle: { fontSize: '15px', fontWeight: '900', color: '#0f172a', margin: 0 },
-  locationText: { fontSize: '11px', color: '#64748b' },
-  lockToggleBtn: { padding: '6px 14px', borderRadius: '6px', fontSize: '11px', fontWeight: '800', cursor: 'pointer', border: 'none' },
+  clickableDocTitle: { fontSize: '12px', fontWeight: '900', color: '#0284c7', textDecoration: 'underline', cursor: 'pointer' },
+  viewSmallBtn: { backgroundColor: '#e0f2fe', color: '#0369a1', textDecoration: 'none', border: 'none', padding: '4px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: '800', display: 'inline-block' },
+  downloadSmallBtn: { backgroundColor: '#0284c7', color: '#ffffff', textDecoration: 'none', border: 'none', padding: '4px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: '800', display: 'inline-block' },
 
-  stepperBar: { display: 'flex', gap: '8px', marginBottom: '12px', flexWrap: 'wrap', flexShrink: 0 },
-  stepTab: { padding: '6px 12px', borderRadius: '6px', border: '1px solid', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', gap: '6px', alignItems: 'center' },
+  uploadSmallBtn: { backgroundColor: '#0284c7', color: '#ffffff', border: 'none', padding: '4px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: '800' },
+  approveSmallBtn: { backgroundColor: '#16a34a', color: '#ffffff', border: 'none', padding: '4px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: '800' },
 
-  docSection: { backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' },
-  docSectionHeader: { display: 'flex', justifyContent: 'space-between', padding: '8px 12px', backgroundColor: '#f8fafc', fontSize: '10px', fontWeight: '800', color: '#475569', flexShrink: 0, borderBottom: '1px solid #e2e8f0' },
-  docListScrollable: { flex: 1, overflowY: 'auto', padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px' },
-  docRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 14px', borderRadius: '8px', backgroundColor: '#ffffff' },
-  docIconBadge: { width: '32px', height: '32px', borderRadius: '6px', backgroundColor: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 },
-  fileNamePill: { fontSize: '9px', fontWeight: '700', color: '#0f766e', backgroundColor: '#ccfbf1', padding: '2px 6px', borderRadius: '4px' },
-
-  verifiedTag: { fontSize: '10px', fontWeight: '800', color: '#15803d', backgroundColor: '#dcfce7', padding: '3px 8px', borderRadius: '4px' },
-  pendingTag: { fontSize: '10px', fontWeight: '800', color: '#b45309', backgroundColor: '#fef3c7', padding: '3px 8px', borderRadius: '4px' },
-  rejectedTag: { fontSize: '10px', fontWeight: '800', color: '#991b1b', backgroundColor: '#fee2e2', padding: '3px 8px', borderRadius: '4px' },
-  missingTag: { fontSize: '10px', fontWeight: '800', color: '#475569', backgroundColor: '#f1f5f9', padding: '3px 8px', borderRadius: '4px' },
-
-  reviewBtn: { padding: '5px 10px', backgroundColor: '#0f766e', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '10px', fontWeight: '800', cursor: 'pointer' },
-  reReviewBtn: { padding: '4px 8px', backgroundColor: '#f59e0b', color: '#fff', border: 'none', borderRadius: '4px', fontSize: '10px', fontWeight: '800' },
-
-  modalOverlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(15, 23, 42, 0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000 },
-  modalContent: { backgroundColor: '#fff', borderRadius: '12px', padding: '20px', width: '90%', maxWidth: '480px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.2)' },
-  modalHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' },
-  closeBtn: { background: 'none', border: 'none', fontSize: '16px', cursor: 'pointer', color: '#64748b' },
-  codeBlock: { display: 'block', backgroundColor: '#f1f5f9', padding: '6px', borderRadius: '4px', wordBreak: 'break-all', marginTop: '4px', fontSize: '10px', color: '#334155' },
-  reviewTextarea: { width: '100%', padding: '8px', border: '1px solid #cbd5e1', borderRadius: '6px', fontSize: '12px', boxSizing: 'border-box' },
-
-  docViewerPaper: { border: '1px solid #cbd5e1', borderRadius: '8px', backgroundColor: '#ffffff', padding: '20px', boxShadow: 'inset 0 0 10px rgba(0,0,0,0.02)' },
-
-  approveBtn: { flex: 1, padding: '8px 14px', backgroundColor: '#10b981', color: '#fff', border: 'none', borderRadius: '6px', fontWeight: '800', fontSize: '11px', cursor: 'pointer' },
-  forceReReviewActionBtn: { flex: 1, padding: '8px 14px', backgroundColor: '#f59e0b', color: '#fff', border: 'none', borderRadius: '6px', fontWeight: '800', fontSize: '11px', cursor: 'pointer' },
-  rejectBtn: { flex: 1, padding: '8px 14px', backgroundColor: '#ef4444', color: '#fff', border: 'none', borderRadius: '6px', fontWeight: '800', fontSize: '11px', cursor: 'pointer' }
+  modalOverlay: { position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(15, 23, 42, 0.75)', backdropFilter: 'blur(3px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 9999 },
+  modalCard: { backgroundColor: '#ffffff', borderRadius: '10px', width: '360px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' },
+  modalHeader: { backgroundColor: '#0f172a', color: '#ffffff', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  modalInput: { width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '11px', marginTop: '4px', boxSizing: 'border-box' },
+  modalSubmitBtn: { width: '100%', backgroundColor: '#0284c7', color: '#ffffff', border: 'none', padding: '10px', borderRadius: '6px', fontSize: '12px', fontWeight: '800', marginTop: '8px' }
 };

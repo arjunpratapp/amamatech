@@ -7,10 +7,10 @@ export default function Header({ user, onLogout, publicTab, setPublicTab }) {
   const isLogistics = user?.role === 'LOGISTICS' || user?.role === 'CARRIER' || user?.role === 'TRANSPORTER';
   const isAdmin = user?.role === 'ADMIN' || user?.role === 'MASTER_ADMIN';
 
-  // Dynamic vibrant accents matching role workspaces
-  const themeColor = isLoggedIn 
-    ? (isAdmin ? '#60a5fa' : isLogistics ? '#10b981' : isSupplier ? '#fbbf24' : '#ec4899') 
-    : '#38bdf8';
+  // Tasteful dynamic accents matching roles
+  const roleColor = isLoggedIn 
+    ? (isAdmin ? '#60a5fa' : isLogistics ? '#34d399' : isSupplier ? '#eab308' : '#f472b6') 
+    : '#eab308';
 
   const handleNavClick = (tab) => {
     if (setPublicTab) setPublicTab(tab);
@@ -25,16 +25,17 @@ export default function Header({ user, onLogout, publicTab, setPublicTab }) {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 16px 40px;
-          background-color: rgba(30, 58, 138, 0.85);
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          border-bottom: 2px solid #2563eb;
+          padding: 12px 36px;
+          /* Sophisticated Deep Slate-Navy Background */
+          background: rgba(15, 23, 42, 0.92);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border-bottom: 1px solid rgba(234, 179, 8, 0.25);
           position: sticky;
           top: 0;
           z-index: 1000;
           box-sizing: border-box;
-          box-shadow: 0 4px 20px rgba(15, 23, 42, 0.3);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
           width: 100%;
         }
 
@@ -42,7 +43,7 @@ export default function Header({ user, onLogout, publicTab, setPublicTab }) {
           display: none;
           background: none;
           border: none;
-          color: #ffffff;
+          color: #fef08a;
           font-size: 24px;
           cursor: pointer;
           padding: 4px;
@@ -51,13 +52,34 @@ export default function Header({ user, onLogout, publicTab, setPublicTab }) {
         .nav-menu {
           display: flex;
           align-items: center;
-          gap: 16px;
+          gap: 12px;
+        }
+
+        /* Subtle Champagne Gold Accent */
+        .gold-brand-text {
+          color: #fef08a;
+          letter-spacing: 0.05em;
+        }
+
+        .nav-button-item {
+          background: none;
+          border: none;
+          padding: 8px 14px;
+          font-weight: 600;
+          font-size: 0.88rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          border-radius: 6px;
+        }
+
+        .nav-button-item:hover {
+          background: rgba(255, 255, 255, 0.05);
         }
 
         /* Tablet Breakpoint (iPads & Small Laptops) */
         @media (max-width: 900px) {
           .header-container {
-            padding: 14px 24px;
+            padding: 12px 20px;
           }
         }
 
@@ -80,7 +102,7 @@ export default function Header({ user, onLogout, publicTab, setPublicTab }) {
             padding-top: 12px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             align-items: stretch;
-            gap: 10px;
+            gap: 8px;
           }
 
           .mobile-full-width {
@@ -104,18 +126,15 @@ export default function Header({ user, onLogout, publicTab, setPublicTab }) {
             if (!isLoggedIn && setPublicTab) handleNavClick('home');
           }}
         >
-          <div style={{ ...styles.logoMark, background: themeColor, boxShadow: `0 0 12px ${themeColor}` }}>
+          {/* Subtle Amma Gold Icon Badge */}
+          <div style={styles.logoMark}>
             {isLoggedIn ? (isAdmin ? '🛡️' : isLogistics ? '⚓' : isSupplier ? '📦' : '🛒') : '✦'}
           </div>
-          <div>
-            <h1 style={styles.brandName}>AMAMA GLOBAL TRADE</h1>
-            <span style={styles.networkStatus}>
-              {isAdmin 
-                ? '🛡️ MASTER ADMIN CONSOLE' 
-                : isLogistics 
-                ? '⚓ LOGISTICS TRACKER ACTIVE' 
-                : '● Operational Gateway'}
-            </span>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h1 className="gold-brand-text" style={styles.brandName}>
+              AMAMA TECHNOLOGIES
+            </h1>
+            
           </div>
         </div>
 
@@ -133,62 +152,55 @@ export default function Header({ user, onLogout, publicTab, setPublicTab }) {
           {!isLoggedIn ? (
             <>
               <button 
-                className="mobile-full-width"
+                className="nav-button-item mobile-full-width"
                 onClick={() => handleNavClick('home')} 
                 style={{
-                  ...styles.navLink, 
-                  color: publicTab === 'home' ? '#ffffff' : '#93c5fd',
-                  borderBottom: publicTab === 'home' ? '2px solid #38bdf8' : 'none'
+                  color: publicTab === 'home' ? '#fef08a' : '#cbd5e1',
+                  borderBottom: publicTab === 'home' ? '2px solid #eab308' : '2px solid transparent'
                 }}
               >
                 Home
               </button>
 
               <button 
-                className="mobile-full-width"
+                className="nav-button-item mobile-full-width"
                 onClick={() => handleNavClick('market')} 
                 style={{
-                  ...styles.navLink, 
-                  color: publicTab === 'market' ? '#ffffff' : '#93c5fd',
-                  borderBottom: publicTab === 'market' ? '2px solid #38bdf8' : 'none'
+                  color: publicTab === 'market' ? '#fef08a' : '#cbd5e1',
+                  borderBottom: publicTab === 'market' ? '2px solid #eab308' : '2px solid transparent'
                 }}
               >
                 Market Overview
               </button>
 
-              {/* 🚢 Logistics Public Preview Nav Link */}
               <button 
-                className="mobile-full-width"
+                className="nav-button-item mobile-full-width"
                 onClick={() => handleNavClick('logistics')} 
                 style={{
-                  ...styles.navLink, 
-                  color: publicTab === 'logistics' ? '#ffffff' : '#93c5fd',
-                  borderBottom: publicTab === 'logistics' ? '2px solid #10b981' : 'none'
+                  color: publicTab === 'logistics' ? '#fef08a' : '#cbd5e1',
+                  borderBottom: publicTab === 'logistics' ? '2px solid #34d399' : '2px solid transparent'
                 }}
               >
                 🚢 Logistics
               </button>
 
               <button 
-                className="mobile-full-width"
+                className="nav-button-item mobile-full-width"
                 onClick={() => handleNavClick('register')} 
                 style={{
-                  ...styles.navLink, 
-                  color: publicTab === 'register' ? '#ffffff' : '#93c5fd',
-                  borderBottom: publicTab === 'register' ? '2px solid #38bdf8' : 'none'
+                  color: publicTab === 'register' ? '#fef08a' : '#cbd5e1',
+                  borderBottom: publicTab === 'register' ? '2px solid #eab308' : '2px solid transparent'
                 }}
               >
                 Apply / Register
               </button>
 
-              {/* Public ERP Admin Portal Toggle / Preview Link */}
               <button 
-                className="mobile-full-width"
+                className="nav-button-item mobile-full-width"
                 onClick={() => handleNavClick('admin')} 
                 style={{
-                  ...styles.navLink, 
-                  color: publicTab === 'admin' ? '#ffffff' : '#93c5fd',
-                  borderBottom: publicTab === 'admin' ? '2px solid #60a5fa' : 'none'
+                  color: publicTab === 'admin' ? '#fef08a' : '#cbd5e1',
+                  borderBottom: publicTab === 'admin' ? '2px solid #60a5fa' : '2px solid transparent'
                 }}
               >
                 ERP Admin
@@ -197,10 +209,7 @@ export default function Header({ user, onLogout, publicTab, setPublicTab }) {
               <button 
                 className="mobile-full-width"
                 onClick={() => handleNavClick('login')} 
-                style={{
-                  ...styles.loginActionBtn, 
-                  background: publicTab === 'login' ? '#0284c7' : '#0369a1'
-                }}
+                style={styles.loginActionBtn}
               >
                 Sign In
               </button>
@@ -209,8 +218,8 @@ export default function Header({ user, onLogout, publicTab, setPublicTab }) {
             <div className="user-section-mobile" style={styles.userSection}>
               <div style={styles.userInfo}>
                 <span style={styles.userName}>{user.name || user.email || 'Admin Controller'}</span>
-                <span style={{ ...styles.userBadge, borderColor: themeColor, color: themeColor }}>
-                  {user.role || 'ADMIN'}
+                <span style={{ ...styles.userBadge, borderColor: roleColor, color: roleColor }}>
+                  {user.role || 'SUPPLIER'}
                 </span>
               </div>
               <button 
@@ -236,46 +245,39 @@ const styles = {
     cursor: 'pointer',
   },
   logoMark: {
-    width: '36px',
-    height: '36px',
-    borderRadius: '8px',
+    width: '34px',
+    height: '34px',
+    borderRadius: '6px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#0f172a',
-    fontWeight: '900',
-    fontSize: '1.1rem',
+    background: 'rgba(234, 179, 8, 0.15)',
+    border: '1px solid rgba(234, 179, 8, 0.4)',
+    color: '#fef08a',
+    fontWeight: '800',
+    fontSize: '1rem',
     transition: 'all 0.3s ease',
   },
   brandName: {
-    color: '#ffffff',
-    fontSize: '1.05rem',
-    fontWeight: '900',
-    letterSpacing: '0.04em',
+    fontSize: '1.1rem',
+    fontWeight: '800',
     margin: 0,
-    lineHeight: 1.2,
+    lineHeight: 1.1,
   },
-  networkStatus: {
-    color: '#34d399',
-    fontSize: '0.68rem',
+  subtext: {
+    color: '#94a3b8',
+    fontSize: '0.62rem',
     fontWeight: '700',
-    letterSpacing: '0.05em',
-  },
-  navLink: {
-    background: 'none',
-    border: 'none',
-    padding: '8px 12px',
-    fontWeight: '700',
-    fontSize: '0.88rem',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
+    letterSpacing: '0.08em',
+    marginTop: '2px',
   },
   loginActionBtn: {
-    color: '#ffffff',
-    border: '1px solid #38bdf8',
-    padding: '8px 18px',
-    borderRadius: '8px',
-    fontWeight: '800',
+    color: '#fef08a',
+    background: 'rgba(234, 179, 8, 0.12)',
+    border: '1px solid rgba(234, 179, 8, 0.4)',
+    padding: '7px 16px',
+    borderRadius: '6px',
+    fontWeight: '700',
     fontSize: '0.85rem',
     cursor: 'pointer',
     transition: 'all 0.2s ease',
@@ -291,9 +293,9 @@ const styles = {
     alignItems: 'flex-end',
   },
   userName: {
-    color: '#ffffff',
+    color: '#f8fafc',
     fontSize: '0.85rem',
-    fontWeight: '800',
+    fontWeight: '700',
   },
   userBadge: {
     fontSize: '0.65rem',
@@ -305,12 +307,12 @@ const styles = {
     textTransform: 'uppercase',
   },
   logoutBtn: {
-    background: 'rgba(239, 68, 68, 0.15)',
+    background: 'rgba(239, 68, 68, 0.12)',
     color: '#fca5a5',
-    border: '1px solid rgba(239, 68, 68, 0.4)',
-    padding: '6px 14px',
+    border: '1px solid rgba(239, 68, 68, 0.3)',
+    padding: '6px 12px',
     borderRadius: '6px',
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: '0.8rem',
     cursor: 'pointer',
     transition: 'all 0.2s ease',

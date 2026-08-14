@@ -191,6 +191,13 @@ export default function OnboardingPortal({ initialParams, onComplete }) {
   const [traderData, setTraderData] = useState({ companyName: '', iecNumber: '', gstin: '' });
   const [buyerData, setBuyerData] = useState({ legalName: '', jurisdictionCountry: 'UAE', emirateOrState: 'Dubai' });
 
+  // Real trade data collected here powers the live buyer/seller directory
+  // (GET /api/v1/directory/*) — same field names for both roles so a
+  // supplier's "what I sell" and a buyer's "what I'm sourcing" line up.
+  const [tradeData, setTradeData] = useState({
+    commodity: '', pricePerUnit: '', quantity: '', originPort: '', destPort: ''
+  });
+
   const [uiTexts, setUiTexts] = useState(DEFAULT_UI_TEXTS);
   const [translatedRequirements, setTranslatedRequirements] = useState([]);
   const [isTranslating, setIsTranslating] = useState(false);
@@ -366,7 +373,7 @@ export default function OnboardingPortal({ initialParams, onComplete }) {
     setViewMode('STATUS_PAGE');
     setOnboardingStatus('IN_PROGRESS');
 
-    const activeProfile = role === 'SUPPLIER' ? (sellerType === 'PRODUCER' ? producerData : traderData) : buyerData;
+    const activeProfile = { ...(role === 'SUPPLIER' ? (sellerType === 'PRODUCER' ? producerData : traderData) : buyerData), ...tradeData };
     const formData = new FormData();
     formData.append('language', language);
     formData.append('role', role);
@@ -679,6 +686,33 @@ export default function OnboardingPortal({ initialParams, onComplete }) {
                       </div>
                     </>
                   )}
+
+                  {/* TRADE DETAILS — feeds the real buyer/seller directory API
+                      instead of the old hardcoded demo listings. */}
+                  <div style={styles.field}>
+                    <label style={styles.label}>{role === 'SUPPLIER' ? 'Commodity / Product You Export' : "Commodity / Product You're Sourcing"}</label>
+                    <input type="text" value={tradeData.commodity} onChange={(e) => setTradeData({ ...tradeData, commodity: e.target.value })} placeholder="e.g. Fresh Bananas (Cavendish)" style={styles.input} />
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <div style={{ ...styles.field, flex: 1 }}>
+                      <label style={styles.label}>{role === 'SUPPLIER' ? 'Price per Unit (USD/MT)' : 'Target Price per Unit (USD/MT)'}</label>
+                      <input type="number" value={tradeData.pricePerUnit} onChange={(e) => setTradeData({ ...tradeData, pricePerUnit: e.target.value })} placeholder="500" style={styles.input} />
+                    </div>
+                    <div style={{ ...styles.field, flex: 1 }}>
+                      <label style={styles.label}>{role === 'SUPPLIER' ? 'Minimum Order Quantity (MT)' : 'Required Quantity (MT)'}</label>
+                      <input type="number" value={tradeData.quantity} onChange={(e) => setTradeData({ ...tradeData, quantity: e.target.value })} placeholder="20" style={styles.input} />
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <div style={{ ...styles.field, flex: 1 }}>
+                      <label style={styles.label}>{role === 'SUPPLIER' ? 'Origin Port' : 'Preferred Origin Port'}</label>
+                      <input type="text" value={tradeData.originPort} onChange={(e) => setTradeData({ ...tradeData, originPort: e.target.value })} placeholder="e.g. Mundra (INMUN)" style={styles.input} />
+                    </div>
+                    <div style={{ ...styles.field, flex: 1 }}>
+                      <label style={styles.label}>{role === 'SUPPLIER' ? 'Primary Destination Port' : 'Destination Port (Your Import Port)'}</label>
+                      <input type="text" value={tradeData.destPort} onChange={(e) => setTradeData({ ...tradeData, destPort: e.target.value })} placeholder="e.g. Jebel Ali (AEJEA)" style={styles.input} />
+                    </div>
+                  </div>
                 </div>
 
                 <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
