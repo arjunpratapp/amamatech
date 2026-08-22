@@ -28,7 +28,7 @@ export default function App() {
   const [onboardingParams, setOnboardingParams] = useState(null);
 
   // Active HS Code for real-time market overview pages
-  const [activeHsCode, setActiveHsCode] = useState('080510'); // Default: Fresh Orange
+  const [activeHsCode, setActiveHsCode] = useState('080510'); // Default: 
 
   // State to pass registered credentials from onboarding into Login component
   const [onboardedInfo, setOnboardedInfo] = useState({ email: '', role: 'SUPPLIER' });
